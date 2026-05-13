@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "782601360703",
+    "project_id": "auth-router-context-36be7",
+    "storage_bucket": "auth-router-context-36be7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:782601360703:android:bb5bcb7acea09dd1e4af8a",
+        "android_client_info": {
+          "package_name": "com.example.chat_messaging"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "782601360703-o80na9cl1ih87q1fk7uj72qctldalsng.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwyXAbtPFkoVzb0bA33eiI28vc12GbHVc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "782601360703-o80na9cl1ih87q1fk7uj72qctldalsng.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
