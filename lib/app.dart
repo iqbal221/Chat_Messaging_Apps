@@ -1,4 +1,9 @@
+import 'package:chat_messaging/core/routes/app_routes.dart';
+import 'package:chat_messaging/core/theme/app_theme.dart';
+import 'package:chat_messaging/core/theme/theme_provider.dart';
+import 'package:chat_messaging/core/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ChatMessaging extends StatefulWidget {
   const ChatMessaging({super.key});
@@ -10,6 +15,20 @@ class ChatMessaging extends StatefulWidget {
 class _ChatMessagingState extends State<ChatMessaging> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => ThemeProvider())],
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return MaterialApp(
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: themeProvider.themeMode,
+            initialRoute: HomeScreen.name,
+            onGenerateRoute: AppRoutes.routes,
+            home: const HomeScreen(),
+          );
+        },
+      ),
+    );
   }
 }
