@@ -1,3 +1,4 @@
+import 'package:chat_messaging/core/screens/otp_verify.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
@@ -58,34 +59,35 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
                   hintText: 'Phone Number',
                   hintStyle: const TextStyle(color: Colors.grey),
                   filled: true,
-                  fillColor: AppTheme.lightTheme.scaffoldBackgroundColor,
+                  fillColor: AppTheme.lightTheme.hintColor,
                   contentPadding: const EdgeInsets.symmetric(
                     vertical: 18,
                     horizontal: 16,
                   ),
 
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Colors.grey.shade300),
-                  ),
+                  // border: OutlineInputBorder(
+                  //   borderRadius: BorderRadius.circular(8),
+                  //   borderSide: BorderSide(color: Colors.grey.shade300),
+                  // ),
 
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Colors.grey.shade600),
-                  ),
+                  // enabledBorder: OutlineInputBorder(
+                  //   borderRadius: BorderRadius.circular(8),
+                  //   borderSide: BorderSide(color: Colors.grey.shade600),
+                  // ),
 
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(
-                      color: AppTheme.lightTheme.primaryColor,
-                    ),
-                  ),
+                  // focusedBorder: OutlineInputBorder(
+                  //   borderRadius: BorderRadius.circular(8),
+                  //   borderSide: BorderSide(
+                  //     color: AppTheme.lightTheme.primaryColor,
+                  //   ),
+                  // ),
                 ),
 
                 onChanged: (phone) {
-                  completePhoneNumber = phone.completeNumber;
-
-                  debugPrint(completePhoneNumber);
+                  setState(() {
+                    completePhoneNumber = phone.completeNumber;
+                  });
+                  debugPrint("PHONE: $completePhoneNumber");
                 },
               ),
 
@@ -97,7 +99,20 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
 
                 child: ElevatedButton(
                   onPressed: () {
-                    debugPrint(completePhoneNumber);
+                    if (completePhoneNumber.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Enter valid phone number'),
+                        ),
+                      );
+                      return;
+                    }
+
+                    Navigator.pushNamed(
+                      context,
+                      OtpVerifyScreen.name,
+                      arguments: {'phoneNumber': completePhoneNumber},
+                    );
                   },
 
                   child: const Text(

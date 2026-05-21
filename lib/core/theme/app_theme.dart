@@ -5,7 +5,7 @@ class AppTheme {
   /// CHAT APP LIGHT THEME
   static ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
-    scaffoldBackgroundColor: const Color(0xFFF5F7FB), // soft chat background
+    scaffoldBackgroundColor: Colors.white,
 
     appBarTheme: const AppBarTheme(
       elevation: 0,
@@ -15,6 +15,7 @@ class AppTheme {
     ),
 
     primaryColor: const Color(0xFF002DE3),
+    hintColor: Colors.grey.shade200,
 
     colorScheme: const ColorScheme.light(
       primary: Color(0xFF002DE3),
@@ -65,7 +66,7 @@ class AppTheme {
   /// CHAT APP DARK THEME
   static ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
-    scaffoldBackgroundColor: const Color(0xFF0F1C1B), // deep chat background
+    scaffoldBackgroundColor: const Color(0xFF0F1C1B),
 
     appBarTheme: const AppBarTheme(
       elevation: 0,
@@ -75,6 +76,7 @@ class AppTheme {
     ),
 
     primaryColor: const Color(0xFF25D366),
+    hintColor: const Color(0xFFE5E5E5),
 
     colorScheme: const ColorScheme.dark(
       primary: Color(0xFF25D366),

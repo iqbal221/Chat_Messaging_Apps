@@ -1,5 +1,7 @@
 import 'package:chat_messaging/core/screens/input_phone_screen.dart';
+import 'package:chat_messaging/core/screens/main_nav_bar.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -12,6 +14,25 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   // AUTO CHECK LOGIN
+  //   Future.microtask(() => checkAuthStatus());
+  // }
+
+  Future<void> checkAuthStatus() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    print("CURRENT USER: $user");
+
+    if (user != null) {
+      Navigator.pushReplacementNamed(context, MainNavBarScreen.name);
+    } else {
+      Navigator.pushReplacementNamed(context, PhoneNumberScreen.name);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,9 +60,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(height: 30),
             ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, PhoneNumberScreen.name);
-              },
+              onPressed: checkAuthStatus,
+              // () {
+              //   Navigator.pushNamed(context, PhoneNumberScreen.name);
+              // },
               child: const Text(
                 'Start Messaging',
                 style: TextStyle(fontSize: 20, letterSpacing: 1.5),

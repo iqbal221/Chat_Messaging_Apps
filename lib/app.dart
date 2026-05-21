@@ -1,3 +1,4 @@
+import 'package:chat_messaging/core/providers/auth_provider.dart';
 import 'package:chat_messaging/core/routes/app_routes.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
 import 'package:chat_messaging/core/theme/theme_provider.dart';
@@ -16,7 +17,10 @@ class _ChatMessagingState extends State<ChatMessaging> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => ThemeProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+      ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
           return MaterialApp(
