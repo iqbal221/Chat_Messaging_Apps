@@ -22,6 +22,15 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    print("🔥 MY UID: $myId");
+    print("🔥 RECEIVER UID: ${widget.receiverId}");
+    print("🔥 CHAT ID: ${getChatId()}");
+  }
+
   final TextEditingController messageController = TextEditingController();
 
   final ScrollController scrollController = ScrollController();

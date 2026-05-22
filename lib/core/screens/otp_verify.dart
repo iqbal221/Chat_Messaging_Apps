@@ -1,3 +1,4 @@
+import 'package:chat_messaging/core/screens/new_profile.dart';
 import 'package:chat_messaging/core/screens/profile_screen.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -119,7 +120,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
       // Navigate Home Screen
       Navigator.pushNamedAndRemoveUntil(
         context,
-        ProfileScreen.name,
+        NewUserProfileScreen.name,
         (route) => false,
       );
     } catch (e) {

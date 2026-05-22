@@ -39,9 +39,8 @@ class AppRoutes {
       final args = settings.arguments as Map?;
 
       widget = ChatScreen(
-        receiverId: args?['contactId'] ?? '',
-        receiverName: "${args?['firstName'] ?? ''} ${args?['lastName'] ?? ''}"
-            .trim(),
+        receiverId: args?['receiverId'] ?? '',
+        receiverName: args?['receiverName'] ?? '',
         receiverImage: args?['receiverImage'] ?? '',
       );
     } else if (settings.name == RecentChatScreen.name) {

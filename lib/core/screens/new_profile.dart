@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:chat_messaging/core/screens/main_nav_bar.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -102,6 +103,8 @@ class _NewUserProfileScreenState extends State<NewUserProfileScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Profile Saved')));
+
+      Navigator.pushReplacementNamed(context, MainNavBarScreen.name);
     } catch (e) {
       setState(() => isLoading = false);
 

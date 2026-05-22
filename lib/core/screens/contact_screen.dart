@@ -1,13 +1,25 @@
+import 'package:chat_messaging/core/screens/add_new_contact.dart';
 import 'package:chat_messaging/core/screens/chat_screen.dart';
+import 'package:chat_messaging/core/services/user_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:chat_messaging/core/screens/add_new_contact.dart';
 
-class ContactScreen extends StatelessWidget {
+class ContactScreen extends StatefulWidget {
   const ContactScreen({super.key});
 
   static const String name = '/contacts';
+
+  @override
+  State<ContactScreen> createState() => _ContactScreenState();
+}
+
+class _ContactScreenState extends State<ContactScreen> {
+  bool isSearchVisible = false;
+
+  final TextEditingController searchController = TextEditingController();
+
+  String searchText = '';
 
   @override
   Widget build(BuildContext context) {
@@ -23,20 +35,52 @@ class ContactScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF7F8FA),
 
+      /// APP BAR
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
-        title: const Text(
-          "Select Contact",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
+
+        title: isSearchVisible
+            ? TextField(
+                controller: searchController,
+                autofocus: true,
+                onChanged: (value) {
+                  setState(() {
+                    searchText = value.toLowerCase();
+                  });
+                },
+                decoration: const InputDecoration(
+                  hintText: "Search contact...",
+                  border: InputBorder.none,
+                ),
+              )
+            : const Text(
+                "Select Contact",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+          /// SEARCH BUTTON ALWAYS SHOW
+          IconButton(
+            onPressed: () {
+              setState(() {
+                isSearchVisible = !isSearchVisible;
+
+                if (!isSearchVisible) {
+                  searchController.clear();
+                  searchText = '';
+                }
+              });
+            },
+            icon: Icon(isSearchVisible ? Icons.close : Icons.search),
+          ),
+
           IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
         ],
       ),
 
+      /// FLOATING BUTTON
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.green,
         onPressed: () {
@@ -45,21 +89,44 @@ class ContactScreen extends StatelessWidget {
         child: const Icon(Icons.person_add_alt_1, color: Colors.white),
       ),
 
+      /// BODY
       body: StreamBuilder<QuerySnapshot>(
         stream: contactStream,
+
         builder: (context, snapshot) {
           final contacts = snapshot.data?.docs ?? [];
+
+          /// FILTER CONTACTS
+          final filteredContacts = contacts.where((contact) {
+            final data = contact.data() as Map<String, dynamic>;
+
+            final firstName = (data['firstName'] ?? '')
+                .toString()
+                .toLowerCase();
+
+            final lastName = (data['lastName'] ?? '').toString().toLowerCase();
+
+            final phone = (data['phoneNumber'] ?? '').toString().toLowerCase();
+
+            return firstName.contains(searchText) ||
+                lastName.contains(searchText) ||
+                phone.contains(searchText);
+          }).toList();
 
           return ListView(
             children: [
               const SizedBox(height: 10),
 
-              // ================= TOP ACTIONS (ALWAYS SHOW) =================
+              /// ================= TOP OPTIONS =================
               buildTopOption(
                 icon: Icons.group,
                 title: "New Group",
                 color: Colors.green,
-                onTap: () {},
+                onTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Create Group Coming Soon")),
+                  );
+                },
               ),
 
               buildTopOption(
@@ -75,7 +142,13 @@ class ContactScreen extends StatelessWidget {
                 icon: Icons.groups,
                 title: "New Community",
                 color: Colors.orange,
-                onTap: () {},
+                onTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Create Community Coming Soon"),
+                    ),
+                  );
+                },
               ),
 
               const Padding(
@@ -89,62 +162,84 @@ class ContactScreen extends StatelessWidget {
                 ),
               ),
 
-              // ================= LOADING =================
+              /// ================= LOADING =================
               if (snapshot.connectionState == ConnectionState.waiting)
                 const Padding(
                   padding: EdgeInsets.all(30),
                   child: Center(child: CircularProgressIndicator()),
                 ),
 
-              // ================= EMPTY STATE =================
-              if (snapshot.hasData && contacts.isEmpty)
+              /// ================= EMPTY =================
+              if (snapshot.hasData && filteredContacts.isEmpty)
                 const Padding(
                   padding: EdgeInsets.all(20),
                   child: Center(
                     child: Text(
-                      "No contacts yet. Add new contact 👆",
+                      "No contacts found",
                       style: TextStyle(color: Colors.grey),
                     ),
                   ),
                 ),
 
-              // ================= CONTACT LIST =================
-              if (contacts.isNotEmpty)
+              /// ================= CONTACT LIST =================
+              if (filteredContacts.isNotEmpty)
                 ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: contacts.length,
+                  itemCount: filteredContacts.length,
+
                   itemBuilder: (context, index) {
-                    final contactId = contacts[index].id;
-                    final data = contacts[index].data() as Map<String, dynamic>;
+                    final data =
+                        filteredContacts[index].data() as Map<String, dynamic>;
 
                     final firstName = data['firstName'] ?? '';
+
                     final lastName = data['lastName'] ?? '';
+
                     final phone = data['phoneNumber'] ?? '';
 
                     return ListTile(
                       leading: CircleAvatar(
                         backgroundColor: Colors.blue.shade100,
+
                         child: Text(
-                          firstName.isNotEmpty ? firstName[0] : "?",
+                          firstName.isNotEmpty
+                              ? firstName[0].toUpperCase()
+                              : "?",
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
+
                       title: Text(
                         "$firstName $lastName",
                         style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
+
                       subtitle: Text(phone),
 
-                      onTap: () {
+                      /// OPEN CHAT
+                      onTap: () async {
+                        final receiverId = await UserService.getUserIdByPhone(
+                          phone,
+                        );
+
+                        if (receiverId == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("User not found in system"),
+                            ),
+                          );
+
+                          return;
+                        }
+
                         Navigator.pushNamed(
                           context,
                           ChatScreen.name,
                           arguments: {
-                            'contactId': contactId,
-                            'firstName': firstName,
-                            'lastName': lastName,
-                            'phoneNumber': phone,
+                            "receiverId": receiverId,
+                            "receiverName": "$firstName $lastName".trim(),
+                            "receiverImage": "",
                           },
                         );
                       },
@@ -158,6 +253,7 @@ class ContactScreen extends StatelessWidget {
     );
   }
 
+  /// TOP OPTION TILE
   Widget buildTopOption({
     required IconData icon,
     required String title,
@@ -170,7 +266,9 @@ class ContactScreen extends StatelessWidget {
         backgroundColor: color,
         child: Icon(icon, color: Colors.white),
       ),
+
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+
       onTap: onTap,
     );
   }
