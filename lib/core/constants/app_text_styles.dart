@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 
 class AppTextStyles {
+  static const TextStyle appBarTitle = TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+    color: Colors.white,
+  );
+
   /// Display Text (Calculator Screen)
   static const TextStyle titleLarge = TextStyle(
     fontSize: 30,

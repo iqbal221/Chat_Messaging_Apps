@@ -1,7 +1,8 @@
+import 'package:chat_messaging/core/theme/app_theme.dart';
+import 'package:flutter/material.dart';
 import 'package:chat_messaging/core/screens/recent_chat_screen.dart';
 import 'package:chat_messaging/core/screens/contact_screen.dart';
 import 'package:chat_messaging/core/screens/profile_screen.dart';
-import 'package:flutter/material.dart';
 
 class MainNavBarScreen extends StatefulWidget {
   const MainNavBarScreen({super.key});
@@ -15,38 +16,47 @@ class MainNavBarScreen extends StatefulWidget {
 class _MainNavBarScreenState extends State<MainNavBarScreen> {
   int _selectedIndex = 0;
 
+  final Color primaryColor = const Color(0xFF002DE3);
+
   final List<Widget> _screens = [
     ContactScreen(),
-    RecentChatScreen(
-      receiverId: 'demo',
-      receiverName: 'Chats',
-      receiverImage: '',
-    ),
+    RecentChatScreen(),
     ProfileScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: TMAppbar(),
       body: _screens[_selectedIndex],
+
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
+
+        /// ⭐ SELECTED COLOR FIX
+        indicatorColor: AppTheme.lightTheme.primaryColor.withAlpha(10),
+
         onDestinationSelected: (int index) {
-          _selectedIndex = index;
-          setState(() {});
+          setState(() {
+            _selectedIndex = index;
+          });
         },
+
         destinations: [
           NavigationDestination(
             icon: Icon(Icons.people_alt_outlined),
+            selectedIcon: Icon(Icons.people_alt, color: primaryColor),
             label: "Contacts",
           ),
+
           NavigationDestination(
             icon: Icon(Icons.chat_bubble_outline),
+            selectedIcon: Icon(Icons.chat_bubble, color: primaryColor),
             label: "Chats",
           ),
+
           NavigationDestination(
             icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person, color: primaryColor),
             label: "Profile",
           ),
         ],

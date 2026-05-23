@@ -1,5 +1,5 @@
+import 'package:chat_messaging/core/constants/app_text_styles.dart';
 import 'package:chat_messaging/core/providers/auth_provider.dart';
-import 'package:chat_messaging/core/screens/new_profile.dart';
 import 'package:chat_messaging/core/screens/update_profile.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -32,12 +32,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: AppTheme.lightTheme.scaffoldBackgroundColor,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: AppTheme.lightTheme.scaffoldBackgroundColor,
+        backgroundColor: AppTheme.lightTheme.appBarTheme.backgroundColor,
         centerTitle: true,
-        title: const Text(
-          'Profile',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        ),
+        title: const Text("Profile", style: AppTextStyles.appBarTitle),
         iconTheme: const IconThemeData(color: Colors.black),
       ),
 

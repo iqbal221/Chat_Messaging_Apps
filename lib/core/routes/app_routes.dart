@@ -44,11 +44,7 @@ class AppRoutes {
         receiverImage: args?['receiverImage'] ?? '',
       );
     } else if (settings.name == RecentChatScreen.name) {
-      widget = RecentChatScreen(
-        receiverId: '',
-        receiverName: '',
-        receiverImage: '',
-      );
+      widget = RecentChatScreen();
     }
     return MaterialPageRoute(builder: (ctx) => widget);
   }

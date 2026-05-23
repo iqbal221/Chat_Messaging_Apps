@@ -64,23 +64,6 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
                     vertical: 18,
                     horizontal: 16,
                   ),
-
-                  // border: OutlineInputBorder(
-                  //   borderRadius: BorderRadius.circular(8),
-                  //   borderSide: BorderSide(color: Colors.grey.shade300),
-                  // ),
-
-                  // enabledBorder: OutlineInputBorder(
-                  //   borderRadius: BorderRadius.circular(8),
-                  //   borderSide: BorderSide(color: Colors.grey.shade600),
-                  // ),
-
-                  // focusedBorder: OutlineInputBorder(
-                  //   borderRadius: BorderRadius.circular(8),
-                  //   borderSide: BorderSide(
-                  //     color: AppTheme.lightTheme.primaryColor,
-                  //   ),
-                  // ),
                 ),
 
                 onChanged: (phone) {

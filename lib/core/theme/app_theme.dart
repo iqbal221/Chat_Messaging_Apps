@@ -5,20 +5,20 @@ class AppTheme {
   /// CHAT APP LIGHT THEME
   static ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
-    scaffoldBackgroundColor: Colors.white,
+    scaffoldBackgroundColor: const Color(0xFFF7F8FA),
 
     appBarTheme: const AppBarTheme(
       elevation: 0,
       centerTitle: true,
-      backgroundColor: Color(0xFF002DE3), // WhatsApp green
+      backgroundColor: Color(0xFF375FFF), // WhatsApp green
       foregroundColor: Colors.white,
     ),
 
-    primaryColor: const Color(0xFF002DE3),
-    hintColor: Colors.grey.shade200,
+    primaryColor: const Color(0xFF375FFF),
+    hintColor: Colors.white,
 
     colorScheme: const ColorScheme.light(
-      primary: Color(0xFF002DE3),
+      primary: Color(0xFF375FFF),
       secondary: Color(0xFF25D366),
       surface: Colors.white,
     ),
@@ -33,7 +33,7 @@ class AppTheme {
 
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF002DE3),
+        backgroundColor: const Color(0xFF375FFF),
         foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 80),
@@ -58,7 +58,7 @@ class AppTheme {
     ),
 
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: Color(0xFF25D366),
+      backgroundColor: Color(0xFF375FFF),
       foregroundColor: Colors.white,
     ),
   );
@@ -71,15 +71,15 @@ class AppTheme {
     appBarTheme: const AppBarTheme(
       elevation: 0,
       centerTitle: true,
-      backgroundColor: Color(0xFF1F2C2B),
+      backgroundColor: Color(0xFF375FFF),
       foregroundColor: Colors.white,
     ),
 
-    primaryColor: const Color(0xFF25D366),
+    primaryColor: const Color(0xFF375FFF),
     hintColor: const Color(0xFFE5E5E5),
 
     colorScheme: const ColorScheme.dark(
-      primary: Color(0xFF25D366),
+      primary: Color(0xFF375FFF),
       secondary: Color(0xFF128C7E),
       surface: Color(0xFF1F2C2B),
     ),
@@ -94,8 +94,8 @@ class AppTheme {
 
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF25D366),
-        foregroundColor: Colors.black,
+        backgroundColor: const Color(0xFF375FFF),
+        foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
       ),
@@ -119,7 +119,7 @@ class AppTheme {
     ),
 
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: Color(0xFF25D366),
+      backgroundColor: Color(0xFF375FFF),
       foregroundColor: Colors.black,
     ),
   );

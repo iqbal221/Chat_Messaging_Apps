@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:chat_messaging/core/constants/app_text_styles.dart';
 import 'package:chat_messaging/core/screens/main_nav_bar.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -121,9 +122,8 @@ class _NewUserProfileScreenState extends State<NewUserProfileScreen> {
     return Scaffold(
       backgroundColor: AppTheme.lightTheme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Create Profile'),
-        backgroundColor: AppTheme.lightTheme.scaffoldBackgroundColor,
-        foregroundColor: Colors.black,
+        title: const Text("Create Profile", style: AppTextStyles.appBarTitle),
+        backgroundColor: AppTheme.lightTheme.appBarTheme.backgroundColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),

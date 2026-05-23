@@ -1,7 +1,14 @@
+import 'dart:convert';
+
+import 'package:chat_messaging/core/theme/app_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'dart:io';
+import 'package:open_filex/open_filex.dart';
+import 'package:file_picker/file_picker.dart';
 
 class ChatScreen extends StatefulWidget {
   final String receiverId;
@@ -22,60 +29,129 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  @override
-  void initState() {
-    super.initState();
-
-    print("🔥 MY UID: $myId");
-    print("🔥 RECEIVER UID: ${widget.receiverId}");
-    print("🔥 CHAT ID: ${getChatId()}");
-  }
-
   final TextEditingController messageController = TextEditingController();
-
   final ScrollController scrollController = ScrollController();
 
   String get myId => FirebaseAuth.instance.currentUser!.uid;
 
-  /// CREATE UNIQUE CHAT ID
   String getChatId() {
     List ids = [myId, widget.receiverId];
     ids.sort();
     return ids.join("_");
   }
 
-  /// SEND MESSAGE
-  Future<void> sendMessage() async {
+  /// ================= SEND MESSAGE =================
+  Future<void> sendMessage({
+    String? fileUrl,
+    String? fileName,
+    String? fileType,
+  }) async {
     final text = messageController.text.trim();
 
-    if (text.isEmpty) return;
+    if (text.isEmpty && fileUrl == null) return;
 
     final chatId = getChatId();
 
     messageController.clear();
 
-    /// SAVE MESSAGE
-    await FirebaseFirestore.instance
-        .collection('chats')
-        .doc(chatId)
-        .collection('messages')
-        .add({
-          "text": text,
-          "senderId": myId,
-          "timestamp": FieldValue.serverTimestamp(),
-        });
+    final chatRef = FirebaseFirestore.instance.collection('chats').doc(chatId);
 
-    /// SAVE LAST MESSAGE INFO
-    await FirebaseFirestore.instance.collection('chats').doc(chatId).set({
+    await chatRef.set({
       "participants": [myId, widget.receiverId],
-      "lastMessage": text,
+      "lastMessage": fileUrl != null ? "📎 $fileName" : text,
       "updatedAt": FieldValue.serverTimestamp(),
     }, SetOptions(merge: true));
+
+    await chatRef.collection('messages').add({
+      "text": text,
+      "fileUrl": fileUrl,
+      "fileName": fileName,
+      "fileType": fileType,
+      "senderId": myId,
+      "timestamp": FieldValue.serverTimestamp(),
+      "isDeleted": false,
+    });
 
     scrollToBottom();
   }
 
-  /// GET REALTIME MESSAGES
+  /// ================= PICK & SEND FILE =================
+  Future<void> pickFile() async {
+    final result = await FilePicker.pickFiles(type: FileType.any);
+
+    if (result == null) return;
+
+    final pickedFile = result.files.first;
+
+    if (pickedFile.path == null) return;
+
+    final file = File(pickedFile.path!);
+
+    final fileName = pickedFile.name;
+
+    final ext = fileName.split('.').last.toLowerCase();
+
+    String fileType = "file";
+
+    if (['jpg', 'jpeg', 'png', 'gif', 'webp'].contains(ext)) {
+      fileType = "image";
+    } else if (ext == "pdf") {
+      fileType = "pdf";
+    }
+
+    /// STORAGE
+    final String cloudName = "deuky2rb8";
+    final String uploadPreset = "chat_app_unsigned";
+
+    final uri = Uri.parse(
+      "https://api.cloudinary.com/v1_1/$cloudName/auto/upload",
+    );
+
+    final request = http.MultipartRequest("POST", uri);
+
+    /// UPLOAD PRESET
+    request.fields['upload_preset'] = uploadPreset;
+
+    /// FILE
+    request.files.add(await http.MultipartFile.fromPath('file', file.path));
+
+    /// SEND REQUEST
+    final response = await request.send();
+
+    if (response.statusCode == 200) {
+      final responseData = await response.stream.bytesToString();
+
+      final data = jsonDecode(responseData);
+
+      /// FILE URL
+      final downloadUrl = data['secure_url'];
+
+      /// SEND MESSAGE
+      await sendMessage(
+        fileUrl: downloadUrl,
+        fileName: fileName,
+        fileType: fileType,
+      );
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Cloudinary upload failed")));
+    }
+  }
+
+  /// ================= DELETE FOR EVERYONE =================
+  Future<void> deleteForEveryone(String messageId) async {
+    final chatId = getChatId();
+
+    await FirebaseFirestore.instance
+        .collection('chats')
+        .doc(chatId)
+        .collection('messages')
+        .doc(messageId)
+        .delete();
+  }
+
+  /// ================= MESSAGES STREAM =================
   Stream<QuerySnapshot> getMessages() {
     return FirebaseFirestore.instance
         .collection('chats')
@@ -85,7 +161,6 @@ class _ChatScreenState extends State<ChatScreen> {
         .snapshots();
   }
 
-  /// AUTO SCROLL
   void scrollToBottom() {
     Future.delayed(const Duration(milliseconds: 200), () {
       if (scrollController.hasClients) {
@@ -99,22 +174,12 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   @override
-  void dispose() {
-    messageController.dispose();
-    scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: AppTheme.lightTheme.scaffoldBackgroundColor,
 
-      /// APP BAR
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        backgroundColor: AppTheme.lightTheme.appBarTheme.backgroundColor,
         title: Row(
           children: [
             CircleAvatar(
@@ -125,54 +190,24 @@ class _ChatScreenState extends State<ChatScreen> {
                   ? const Icon(Icons.person)
                   : null,
             ),
-
             const SizedBox(width: 10),
-
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.receiverName,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-
-                const Text(
-                  "online",
-                  style: TextStyle(fontSize: 12, color: Colors.green),
-                ),
-              ],
-            ),
+            Text(widget.receiverName),
           ],
         ),
       ),
 
-      /// BODY
       body: Column(
         children: [
-          /// MESSAGES
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: getMessages(),
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
+                if (!snapshot.hasData) {
                   return const Center(child: CircularProgressIndicator());
-                }
-
-                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      "No messages yet",
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  );
                 }
 
                 final messages = snapshot.data!.docs;
 
-                /// AUTO SCROLL WHEN NEW MESSAGE ARRIVES
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   scrollToBottom();
                 });
@@ -184,93 +219,318 @@ class _ChatScreenState extends State<ChatScreen> {
                   itemBuilder: (context, index) {
                     final msg = messages[index].data() as Map<String, dynamic>;
 
+                    final messageId = messages[index].id;
                     final isMe = msg['senderId'] == myId;
+                    final isDeleted = msg['isDeleted'] == true;
 
-                    /// FORMAT TIME
                     Timestamp? timestamp = msg['timestamp'];
 
-                    String formattedTime = '';
-
+                    String time = "";
                     if (timestamp != null) {
-                      DateTime dateTime = timestamp.toDate();
-
-                      formattedTime = DateFormat('hh:mm a').format(dateTime);
+                      time = DateFormat('hh:mm a').format(timestamp.toDate());
                     }
 
-                    return _chatBubble(msg['text'] ?? '', isMe, formattedTime);
+                    return GestureDetector(
+                      onLongPress: () {
+                        _showMessageOptions(messageId: messageId, isMe: isMe);
+                      },
+                      child: _chatBubble(
+                        isDeleted
+                            ? "This message was deleted"
+                            : msg['text'] ?? '',
+                        isMe,
+                        time,
+                        isDeleted,
+                        msg['fileUrl'],
+                        msg['fileName'],
+                        msg['fileType'],
+                      ),
+                    );
                   },
                 );
               },
             ),
           ),
 
-          /// INPUT BOX
           _buildInputBox(),
         ],
       ),
     );
   }
 
-  /// CHAT BUBBLE
-  Widget _chatBubble(String message, bool isMe, String time) {
+  /// ================= MESSAGE OPTIONS =================
+  void _showMessageOptions({required String messageId, required bool isMe}) {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return SafeArea(
+          child: Wrap(
+            children: [
+              if (isMe)
+                ListTile(
+                  leading: const Icon(
+                    Icons.delete_forever,
+                    size: 22,
+                    color: Colors.red,
+                  ),
+                  title: const Text("Delete for everyone"),
+                  onTap: () {
+                    Navigator.pop(context);
+                    deleteForEveryone(messageId);
+                  },
+                ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _chatBubble(
+    String message,
+    bool isMe,
+    String time,
+    bool isDeleted,
+    String? fileUrl,
+    String? fileName,
+    String? fileType,
+  ) {
+    final bool isFileMessage = fileUrl != null;
+
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
 
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 4),
+      child: Column(
+        crossAxisAlignment: isMe
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
 
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        children: [
+          /// ================= IMAGE FILE =================
+          if (fileUrl != null && fileType == "image")
+            GestureDetector(
+              onTap: () {
+                OpenFilex.open(fileUrl);
+              },
+              child: Container(
+                margin: const EdgeInsets.symmetric(vertical: 4),
 
-        constraints: const BoxConstraints(maxWidth: 280),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(14),
 
-        decoration: BoxDecoration(
-          color: isMe ? Colors.green : Colors.white,
-
-          borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(16),
-            topRight: const Radius.circular(16),
-
-            bottomLeft: isMe
-                ? const Radius.circular(16)
-                : const Radius.circular(0),
-
-            bottomRight: isMe
-                ? const Radius.circular(0)
-                : const Radius.circular(16),
-          ),
-
-          boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
-        ),
-
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            /// MESSAGE
-            Text(
-              message,
-              style: TextStyle(
-                color: isMe ? Colors.white : Colors.black,
-                fontSize: 15,
+                  child: Image.network(
+                    fileUrl,
+                    height: 220,
+                    width: 220,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
 
-            const SizedBox(height: 5),
+          /// ================= PDF FILE =================
+          if (fileUrl != null && fileType == "pdf")
+            GestureDetector(
+              onTap: () {
+                // OPEN PDF
+              },
 
-            /// TIME
-            Text(
-              time,
-              style: TextStyle(
-                color: isMe ? Colors.white70 : Colors.grey,
-                fontSize: 11,
+              child: Container(
+                width: 240,
+
+                margin: const EdgeInsets.symmetric(vertical: 4),
+
+                padding: const EdgeInsets.all(12),
+
+                decoration: BoxDecoration(
+                  color: Colors.red.shade50,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.picture_as_pdf,
+                      color: Colors.red,
+                      size: 34,
+                    ),
+
+                    const SizedBox(width: 10),
+
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+
+                        children: [
+                          Text(
+                            fileName ?? "PDF File",
+
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+
+                          const SizedBox(height: 4),
+
+                          const Text(
+                            "Tap to open",
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ],
-        ),
+
+          /// ================= OTHER FILE =================
+          if (fileUrl != null && fileType != "image" && fileType != "pdf")
+            GestureDetector(
+              onTap: () {
+                OpenFilex.open(fileUrl);
+              },
+
+              child: Container(
+                width: 240,
+
+                margin: const EdgeInsets.symmetric(vertical: 4),
+
+                padding: const EdgeInsets.all(12),
+
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.insert_drive_file,
+                      color: Colors.blue,
+                      size: 34,
+                    ),
+
+                    const SizedBox(width: 10),
+
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+
+                        children: [
+                          Text(
+                            fileName ?? "File",
+
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+
+                          const SizedBox(height: 4),
+
+                          const Text(
+                            "Tap to open",
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+          /// ================= TEXT MESSAGE =================
+          if (!isFileMessage || message.isNotEmpty)
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 4),
+
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+
+              constraints: const BoxConstraints(maxWidth: 280),
+
+              decoration: BoxDecoration(
+                color: isDeleted
+                    ? Colors.white
+                    : isMe
+                    ? Colors.blue.shade400
+                    : Colors.white,
+
+                borderRadius: BorderRadius.only(
+                  topLeft: const Radius.circular(16),
+                  topRight: const Radius.circular(16),
+
+                  bottomLeft: isMe
+                      ? const Radius.circular(16)
+                      : const Radius.circular(0),
+
+                  bottomRight: isMe
+                      ? const Radius.circular(0)
+                      : const Radius.circular(16),
+                ),
+
+                boxShadow: const [
+                  BoxShadow(color: Colors.black12, blurRadius: 4),
+                ],
+              ),
+
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+
+                children: [
+                  Text(
+                    message,
+
+                    style: TextStyle(
+                      color: isDeleted
+                          ? Colors.grey.shade700
+                          : isMe
+                          ? Colors.white
+                          : Colors.black,
+
+                      fontSize: 15,
+                    ),
+                  ),
+
+                  const SizedBox(height: 5),
+
+                  Text(
+                    time,
+
+                    style: TextStyle(
+                      color: isDeleted
+                          ? Colors.grey
+                          : isMe
+                          ? Colors.white70
+                          : Colors.grey,
+
+                      fontSize: 11,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+          /// ================= FILE TIME =================
+          if (isFileMessage)
+            Padding(
+              padding: const EdgeInsets.only(top: 2, left: 6, right: 6),
+
+              child: Text(
+                time,
+
+                style: const TextStyle(fontSize: 11, color: Colors.grey),
+              ),
+            ),
+        ],
       ),
     );
   }
 
-  /// INPUT BOX
+  /// ================= INPUT =================
+
   Widget _buildInputBox() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
@@ -296,7 +556,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
 
-          IconButton(icon: const Icon(Icons.attach_file), onPressed: () {}),
+          IconButton(icon: const Icon(Icons.attach_file), onPressed: pickFile),
 
           /// SEND BUTTON
           GestureDetector(
@@ -305,8 +565,8 @@ class _ChatScreenState extends State<ChatScreen> {
             child: Container(
               padding: const EdgeInsets.all(10),
 
-              decoration: const BoxDecoration(
-                color: Colors.green,
+              decoration: BoxDecoration(
+                color: AppTheme.lightTheme.primaryColor,
                 shape: BoxShape.circle,
               ),
 

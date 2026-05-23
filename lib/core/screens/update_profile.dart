@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:chat_messaging/core/constants/app_text_styles.dart';
 import 'package:chat_messaging/core/providers/auth_provider.dart';
 import 'package:chat_messaging/core/screens/main_nav_bar.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
@@ -37,6 +38,10 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
   @override
   void initState() {
     super.initState();
+
+    Future.microtask(() {
+      context.read<UserProvider>().getUserData();
+    });
 
     loadUserData();
   }
@@ -161,13 +166,14 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = context.watch<UserProvider>();
+
     return Scaffold(
       backgroundColor: AppTheme.lightTheme.scaffoldBackgroundColor,
 
       appBar: AppBar(
-        title: const Text('Update Profile'),
-        backgroundColor: AppTheme.lightTheme.scaffoldBackgroundColor,
-        foregroundColor: Colors.black,
+        title: const Text("Update Profile", style: AppTextStyles.appBarTitle),
+        backgroundColor: AppTheme.lightTheme.appBarTheme.backgroundColor,
       ),
 
       body: Padding(
@@ -177,29 +183,43 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
           children: [
             const SizedBox(height: 20),
 
-            /// PROFILE IMAGE
-            GestureDetector(
-              onTap: pickImage,
+            Stack(
+              children: [
+                Container(
+                  width: 120,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.blue, width: 3),
+                    image: DecorationImage(
+                      image: userProvider.profileImage.isNotEmpty
+                          ? NetworkImage(userProvider.profileImage)
+                          : const AssetImage('assets/images/avatar.jpg'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
 
-              child: CircleAvatar(
-                radius: 60,
-
-                backgroundColor: Colors.grey.shade300,
-
-                backgroundImage: imageFile != null
-                    ? FileImage(imageFile!)
-                    : imageUrl.isNotEmpty
-                    ? NetworkImage(imageUrl)
-                    : const AssetImage('assets/images/avatar.jpg')
-                          as ImageProvider,
-
-                child: imageFile == null && imageUrl.isEmpty
-                    ? const Icon(Icons.camera_alt, size: 40)
-                    : null,
-              ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: const BoxDecoration(
+                      color: Colors.blue,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.camera_alt,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ],
             ),
 
-            const SizedBox(height: 30),
+            const SizedBox(height: 18),
 
             /// FIRST NAME
             TextField(
@@ -220,7 +240,7 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 18),
 
             /// LAST NAME
             TextField(
@@ -241,7 +261,7 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
               ),
             ),
 
-            const Spacer(),
+            const SizedBox(height: 30),
 
             /// SAVE BUTTON
             SizedBox(

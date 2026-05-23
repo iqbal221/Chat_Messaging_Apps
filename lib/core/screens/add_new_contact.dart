@@ -1,3 +1,5 @@
+import 'package:chat_messaging/core/constants/app_text_styles.dart';
+import 'package:chat_messaging/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -62,17 +64,12 @@ class _AddNewContactScreenState extends State<AddNewContactScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F8FA),
+      backgroundColor: AppTheme.lightTheme.scaffoldBackgroundColor,
 
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-
-        title: const Text(
-          "New Contact",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        backgroundColor: AppTheme.lightTheme.appBarTheme.backgroundColor,
+        title: const Text("Add New Contact", style: AppTextStyles.appBarTitle),
       ),
 
       body: SingleChildScrollView(
@@ -146,19 +143,12 @@ class _AddNewContactScreenState extends State<AddNewContactScreen> {
               height: 55,
 
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                ),
-
                 onPressed: saveContact,
 
                 child: const Text(
-                  "Save Contact",
+                  "Save contact",
                   style: TextStyle(
-                    fontSize: 17,
+                    fontSize: 18,
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
                   ),
