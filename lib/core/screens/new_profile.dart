@@ -133,18 +133,56 @@ class _NewUserProfileScreenState extends State<NewUserProfileScreen> {
 
             GestureDetector(
               onTap: pickImage,
-              child: CircleAvatar(
-                radius: 60,
-                backgroundColor: Colors.grey.shade300,
-                backgroundImage: imageFile != null
-                    ? FileImage(imageFile!)
-                    : null,
-                child: imageFile == null
-                    ? const Icon(Icons.person, size: 70)
-                    : null,
+              child: Stack(
+                alignment: Alignment.bottomRight,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.blue,
+                      border: Border.all(color: Colors.white, width: 2),
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      child: CircleAvatar(
+                        radius: 60,
+                        backgroundColor: Colors.grey.shade200,
+                        backgroundImage: imageFile != null
+                            ? FileImage(imageFile!)
+                            : null,
+                        child: imageFile == null
+                            ? const Icon(
+                                Icons.person,
+                                size: 70,
+                                color: Colors.grey,
+                              )
+                            : null,
+                      ),
+                    ),
+                  ),
+
+                  // Edit Icon
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 2),
+                    ),
+                    child: const Icon(
+                      Icons.camera_alt,
+                      size: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
               ),
             ),
-
             const SizedBox(height: 30),
 
             TextField(

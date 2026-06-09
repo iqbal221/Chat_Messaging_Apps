@@ -1,7 +1,9 @@
 import 'package:chat_messaging/core/constants/app_text_styles.dart';
 import 'package:chat_messaging/core/providers/auth_provider.dart';
+import 'package:chat_messaging/core/screens/input_phone_screen.dart';
 import 'package:chat_messaging/core/screens/update_profile.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -124,23 +126,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
 
               buildTile(
-                icon: Icons.color_lens_outlined,
-                title: 'Appearance',
-                onTap: () {},
-              ),
-
-              buildTile(
-                icon: Icons.help_outline,
-                title: 'Help & Support',
-                onTap: () {},
-              ),
-
-              buildTile(
                 icon: Icons.logout,
                 title: 'Logout',
                 iconColor: Colors.red,
                 textColor: Colors.red,
-                onTap: () {},
+                onTap: () async {
+                  final shouldLogout = await showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text("Logout"),
+                        content: const Text("Are you sure you want to logout?"),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context, false);
+                            },
+                            child: const Text("Cancel"),
+                          ),
+
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context, true);
+                            },
+                            child: const Text(
+                              "Logout",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+
+                  if (shouldLogout == true) {
+                    await FirebaseAuth.instance.signOut();
+
+                    if (context.mounted) {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        PhoneNumberScreen.name,
+                        (route) => false,
+                      );
+                    }
+                  }
+                },
               ),
             ],
           ),

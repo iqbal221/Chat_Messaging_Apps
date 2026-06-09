@@ -104,15 +104,6 @@ class _ContactScreenState extends State<ContactScreen> {
           ],
         ),
 
-        /// ================= FLOATING BUTTON =================
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: AppTheme.lightTheme.primaryColor,
-          onPressed: () {
-            Navigator.pushNamed(context, AddNewContactScreen.name);
-          },
-          child: const Icon(Icons.person_add_alt_1, color: Colors.white),
-        ),
-
         /// ================= BODY =================
         body: StreamBuilder<QuerySnapshot>(
           stream: contactStream,

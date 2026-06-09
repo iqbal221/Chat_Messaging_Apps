@@ -7,7 +7,7 @@ import 'package:chat_messaging/core/screens/main_nav_bar.dart';
 import 'package:chat_messaging/core/screens/new_profile.dart';
 import 'package:chat_messaging/core/screens/otp_verify.dart';
 import 'package:chat_messaging/core/screens/profile_screen.dart';
-import 'package:chat_messaging/core/screens/recent_chat_screen.dart';
+import 'package:chat_messaging/core/screens/recent_chat_contact_screen.dart';
 import 'package:chat_messaging/core/screens/update_profile.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +28,7 @@ class AppRoutes {
     } else if (settings.name == NewUserProfileScreen.name) {
       widget = NewUserProfileScreen();
     } else if (settings.name == MainNavBarScreen.name) {
-      widget = MainNavBarScreen();
+      widget = MainNavBarScreen(initialIndex: 1);
     } else if (settings.name == UpdateUserProfileScreen.name) {
       widget = UpdateUserProfileScreen();
     } else if (settings.name == ContactScreen.name) {
@@ -37,7 +37,6 @@ class AppRoutes {
       widget = AddNewContactScreen();
     } else if (settings.name == ChatScreen.name) {
       final args = settings.arguments as Map?;
-
       widget = ChatScreen(
         receiverId: args?['receiverId'] ?? '',
         receiverName: args?['receiverName'] ?? '',

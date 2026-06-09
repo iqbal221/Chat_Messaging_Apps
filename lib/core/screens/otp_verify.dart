@@ -1,6 +1,7 @@
+import 'package:chat_messaging/core/screens/main_nav_bar.dart';
 import 'package:chat_messaging/core/screens/new_profile.dart';
-import 'package:chat_messaging/core/screens/profile_screen.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pinput/pinput.dart';
@@ -117,7 +118,25 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
         context,
       ).showSnackBar(const SnackBar(content: Text('Login Successful')));
 
-      // Navigate Home Screen
+      // navigate home screen
+      final uid = FirebaseAuth.instance.currentUser?.uid;
+
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .get();
+
+      if (doc.exists) {
+        // User already has a profile, navigate to home screen
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          MainNavBarScreen.name,
+          (route) => false,
+        );
+        return;
+      }
+
+      // Navigate new user profile Screen
       Navigator.pushNamedAndRemoveUntil(
         context,
         NewUserProfileScreen.name,

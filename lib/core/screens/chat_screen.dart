@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:chat_messaging/core/constants/app_text_styles.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,7 +23,7 @@ class ChatScreen extends StatefulWidget {
     required this.receiverImage,
   });
 
-  static const String name = "/chat";
+  static const String name = "/chats";
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -38,6 +39,27 @@ class _ChatScreenState extends State<ChatScreen> {
     List ids = [myId, widget.receiverId];
     ids.sort();
     return ids.join("_");
+  }
+
+  String getDateLabel(DateTime messageTime) {
+    final now = DateTime.now();
+
+    final today = DateTime(now.year, now.month, now.day);
+    final messageDate = DateTime(
+      messageTime.year,
+      messageTime.month,
+      messageTime.day,
+    );
+
+    final diff = today.difference(messageDate).inDays;
+
+    if (diff == 0) {
+      return "Today";
+    } else if (diff == 1) {
+      return "Yesterday";
+    } else {
+      return DateFormat('dd MMM yyyy').format(messageTime);
+    }
   }
 
   /// ================= SEND MESSAGE =================
@@ -70,6 +92,7 @@ class _ChatScreenState extends State<ChatScreen> {
       "senderId": myId,
       "timestamp": FieldValue.serverTimestamp(),
       "isDeleted": false,
+      "deletedFor": [],
     });
 
     scrollToBottom();
@@ -148,7 +171,25 @@ class _ChatScreenState extends State<ChatScreen> {
         .doc(chatId)
         .collection('messages')
         .doc(messageId)
-        .delete();
+        .update({
+          'text': 'This message was deleted',
+          'isDeleted': true,
+          'imageUrl': null, // optional if you support images
+          'deletedAt': FieldValue.serverTimestamp(),
+        });
+  }
+
+  Future<void> deleteForMe(String messageId) async {
+    final chatId = getChatId();
+
+    await FirebaseFirestore.instance
+        .collection('chats')
+        .doc(chatId)
+        .collection('messages')
+        .doc(messageId)
+        .update({
+          'deletedFor': FieldValue.arrayUnion([myId]),
+        });
   }
 
   /// ================= MESSAGES STREAM =================
@@ -182,16 +223,24 @@ class _ChatScreenState extends State<ChatScreen> {
         backgroundColor: AppTheme.lightTheme.appBarTheme.backgroundColor,
         title: Row(
           children: [
-            CircleAvatar(
-              backgroundImage: widget.receiverImage.isNotEmpty
-                  ? NetworkImage(widget.receiverImage)
-                  : null,
-              child: widget.receiverImage.isEmpty
-                  ? const Icon(Icons.person)
-                  : null,
+            Container(
+              padding: const EdgeInsets.all(2), // Border thickness
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white, // Border color
+              ),
+              child: CircleAvatar(
+                radius: 12,
+                backgroundImage: widget.receiverImage.isNotEmpty
+                    ? NetworkImage(widget.receiverImage)
+                    : null,
+                child: widget.receiverImage.isEmpty
+                    ? const Icon(Icons.person)
+                    : null,
+              ),
             ),
             const SizedBox(width: 10),
-            Text(widget.receiverName),
+            Text(widget.receiverName, style: AppTextStyles.displayLarge),
           ],
         ),
       ),
@@ -223,28 +272,82 @@ class _ChatScreenState extends State<ChatScreen> {
                     final isMe = msg['senderId'] == myId;
                     final isDeleted = msg['isDeleted'] == true;
 
-                    Timestamp? timestamp = msg['timestamp'];
+                    final Timestamp? timestamp = msg['timestamp'];
+                    final DateTime messageTime =
+                        timestamp?.toDate() ?? DateTime.now();
 
-                    String time = "";
-                    if (timestamp != null) {
-                      time = DateFormat('hh:mm a').format(timestamp.toDate());
+                    final time = DateFormat('hh:mm a').format(messageTime);
+
+                    /// previous message time
+                    if (index > 0) {}
+
+                    final bool showDateHeader;
+
+                    if (index == 0) {
+                      // First message always shows date
+                      showDateHeader = true;
+                    } else {
+                      final prevMsg =
+                          messages[index - 1].data() as Map<String, dynamic>;
+
+                      final prevTimestamp = prevMsg['timestamp'] as Timestamp?;
+                      final prevTime = prevTimestamp?.toDate();
+
+                      showDateHeader =
+                          prevTime == null ||
+                          messageTime.day != prevTime.day ||
+                          messageTime.month != prevTime.month ||
+                          messageTime.year != prevTime.year;
                     }
+                    return Column(
+                      children: [
+                        /// ✅ DATE HEADER (NOW WORKS)
+                        if (showDateHeader)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Center(
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade200,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  getDateLabel(messageTime),
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black54,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
 
-                    return GestureDetector(
-                      onLongPress: () {
-                        _showMessageOptions(messageId: messageId, isMe: isMe);
-                      },
-                      child: _chatBubble(
-                        isDeleted
-                            ? "This message was deleted"
-                            : msg['text'] ?? '',
-                        isMe,
-                        time,
-                        isDeleted,
-                        msg['fileUrl'],
-                        msg['fileName'],
-                        msg['fileType'],
-                      ),
+                        /// ✅ MESSAGE BUBBLE
+                        GestureDetector(
+                          onLongPress: () {
+                            _showMessageOptions(
+                              messageId: messageId,
+                              isMe: isMe,
+                            );
+                          },
+                          child: _chatBubble(
+                            isDeleted
+                                ? "This message was deleted"
+                                : msg['text'] ?? '',
+                            isMe,
+                            time,
+                            isDeleted,
+                            msg['fileUrl'],
+                            msg['fileName'],
+                            msg['fileType'],
+                          ),
+                        ),
+                      ],
                     );
                   },
                 );
@@ -266,13 +369,18 @@ class _ChatScreenState extends State<ChatScreen> {
         return SafeArea(
           child: Wrap(
             children: [
+              ListTile(
+                leading: const Icon(Icons.delete_outline, color: Colors.orange),
+                title: const Text("Delete for me"),
+                onTap: () {
+                  Navigator.pop(context);
+                  deleteForMe(messageId);
+                },
+              ),
+
               if (isMe)
                 ListTile(
-                  leading: const Icon(
-                    Icons.delete_forever,
-                    size: 22,
-                    color: Colors.red,
-                  ),
+                  leading: const Icon(Icons.delete_forever, color: Colors.red),
                   title: const Text("Delete for everyone"),
                   onTap: () {
                     Navigator.pop(context);
@@ -301,6 +409,7 @@ class _ChatScreenState extends State<ChatScreen> {
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
 
       child: Column(
+        spacing: 10,
         crossAxisAlignment: isMe
             ? CrossAxisAlignment.end
             : CrossAxisAlignment.start,
@@ -445,7 +554,7 @@ class _ChatScreenState extends State<ChatScreen> {
           /// ================= TEXT MESSAGE =================
           if (!isFileMessage || message.isNotEmpty)
             Container(
-              margin: const EdgeInsets.symmetric(vertical: 4),
+              margin: const EdgeInsets.symmetric(vertical: 8),
 
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
 

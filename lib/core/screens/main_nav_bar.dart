@@ -1,11 +1,13 @@
+import 'package:chat_messaging/core/screens/recent_chat_contact_screen.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:chat_messaging/core/screens/recent_chat_screen.dart';
 import 'package:chat_messaging/core/screens/contact_screen.dart';
 import 'package:chat_messaging/core/screens/profile_screen.dart';
 
 class MainNavBarScreen extends StatefulWidget {
-  const MainNavBarScreen({super.key});
+  final int initialIndex;
+
+  const MainNavBarScreen({super.key, this.initialIndex = 0});
 
   static const String name = "/dashboard";
 
