@@ -90,6 +90,8 @@ class _ChatScreenState extends State<ChatScreen> {
       "fileName": fileName,
       "fileType": fileType,
       "senderId": myId,
+      "receiverId": widget.receiverId,
+      "senderName": FirebaseAuth.instance.currentUser!.displayName,
       "timestamp": FieldValue.serverTimestamp(),
       "isDeleted": false,
       "deletedFor": [],
@@ -255,7 +257,13 @@ class _ChatScreenState extends State<ChatScreen> {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                final messages = snapshot.data!.docs;
+                final messages = snapshot.data!.docs.where((doc) {
+                  final data = doc.data() as Map<String, dynamic>;
+
+                  final List<dynamic> deletedFor = data['deletedFor'] ?? [];
+
+                  return !deletedFor.contains(myId);
+                }).toList();
 
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   scrollToBottom();
@@ -564,7 +572,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 color: isDeleted
                     ? Colors.white
                     : isMe
-                    ? Colors.blue.shade400
+                    ? Colors.blue.shade300
                     : Colors.white,
 
                 borderRadius: BorderRadius.only(

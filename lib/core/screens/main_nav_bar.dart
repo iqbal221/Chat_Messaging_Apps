@@ -46,19 +46,28 @@ class _MainNavBarScreenState extends State<MainNavBarScreen> {
         destinations: [
           NavigationDestination(
             icon: Icon(Icons.people_alt_outlined),
-            selectedIcon: Icon(Icons.people_alt, color: primaryColor),
+            selectedIcon: Icon(
+              Icons.people_alt,
+              color: AppTheme.lightTheme.primaryColor,
+            ),
             label: "Contacts",
           ),
 
           NavigationDestination(
             icon: Icon(Icons.chat_bubble_outline),
-            selectedIcon: Icon(Icons.chat_bubble, color: primaryColor),
+            selectedIcon: Icon(
+              Icons.chat_bubble,
+              color: AppTheme.lightTheme.primaryColor,
+            ),
             label: "Chats",
           ),
 
           NavigationDestination(
             icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person, color: primaryColor),
+            selectedIcon: Icon(
+              Icons.person,
+              color: AppTheme.lightTheme.primaryColor,
+            ),
             label: "Profile",
           ),
         ],

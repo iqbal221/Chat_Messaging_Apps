@@ -1,5 +1,6 @@
 import 'package:chat_messaging/core/providers/auth_provider.dart';
 import 'package:chat_messaging/core/routes/app_routes.dart';
+import 'package:chat_messaging/core/services/notification_service.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
 import 'package:chat_messaging/core/theme/theme_provider.dart';
 import 'package:chat_messaging/core/screens/home_screen.dart';
@@ -14,6 +15,8 @@ class ChatMessaging extends StatefulWidget {
 }
 
 class _ChatMessagingState extends State<ChatMessaging> {
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -24,6 +27,7 @@ class _ChatMessagingState extends State<ChatMessaging> {
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
           return MaterialApp(
+            navigatorKey: NotificationService.navigatorKey,
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
             themeMode: themeProvider.themeMode,

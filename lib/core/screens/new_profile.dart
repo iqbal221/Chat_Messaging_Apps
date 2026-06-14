@@ -96,6 +96,7 @@ class _NewUserProfileScreenState extends State<NewUserProfileScreen> {
         'lastName': lastNameController.text.trim(),
         'profileImage': imageUrl,
         'phoneNumber': FirebaseAuth.instance.currentUser?.phoneNumber ?? '',
+        "fcmToken": "",
         'createdAt': FieldValue.serverTimestamp(),
       });
 

@@ -10,15 +10,15 @@ class AppTheme {
     appBarTheme: const AppBarTheme(
       elevation: 0,
       centerTitle: true,
-      backgroundColor: Color(0xFF375FFF), // WhatsApp green
+      backgroundColor: Color(0xFF2196F3), // WhatsApp green
       foregroundColor: Colors.white,
     ),
 
-    primaryColor: const Color(0xFF375FFF),
+    primaryColor: const Color(0xFF2196F3),
     hintColor: Colors.white,
 
     colorScheme: const ColorScheme.light(
-      primary: Color(0xFF375FFF),
+      primary: Color(0xFF2196F3),
       secondary: Color(0xFF25D366),
       surface: Colors.white,
     ),
@@ -33,7 +33,7 @@ class AppTheme {
 
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF375FFF),
+        backgroundColor: const Color(0xFF2196F3),
         foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 80),
@@ -58,7 +58,7 @@ class AppTheme {
     ),
 
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: Color(0xFF375FFF),
+      backgroundColor: Color(0xFF2196F3),
       foregroundColor: Colors.white,
     ),
   );
@@ -71,15 +71,15 @@ class AppTheme {
     appBarTheme: const AppBarTheme(
       elevation: 0,
       centerTitle: true,
-      backgroundColor: Color(0xFF375FFF),
+      backgroundColor: Color(0xFF2196F3),
       foregroundColor: Colors.white,
     ),
 
-    primaryColor: const Color(0xFF375FFF),
+    primaryColor: const Color(0xFF2196F3),
     hintColor: const Color(0xFFE5E5E5),
 
     colorScheme: const ColorScheme.dark(
-      primary: Color(0xFF375FFF),
+      primary: Color(0xFF2196F3),
       secondary: Color(0xFF128C7E),
       surface: Color(0xFF1F2C2B),
     ),
@@ -94,7 +94,7 @@ class AppTheme {
 
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF375FFF),
+        backgroundColor: const Color(0xFF2196F3),
         foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
@@ -119,7 +119,7 @@ class AppTheme {
     ),
 
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: Color(0xFF375FFF),
+      backgroundColor: Color(0xFF2196F3),
       foregroundColor: Colors.black,
     ),
   );

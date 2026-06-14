@@ -1,3 +1,4 @@
+import 'package:chat_messaging/core/constants/app_text_styles.dart';
 import 'package:chat_messaging/core/screens/add_new_contact.dart';
 import 'package:chat_messaging/core/screens/chat_screen.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
@@ -49,7 +50,9 @@ class _RecentChatScreenState extends State<RecentChatScreen> {
         .snapshots();
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Chats")),
+      appBar: AppBar(
+        title: const Text("Recent Chats", style: AppTextStyles.appBarTitle),
+      ),
 
       /// ================= FLOATING BUTTON =================
       floatingActionButton: FloatingActionButton(
