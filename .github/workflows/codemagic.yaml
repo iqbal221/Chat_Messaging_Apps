@@ -1,0 +1,19 @@
+
+  flutter-apk-build:
+    name: Flutter APK Build
+
+    environment:
+      flutter: stable
+
+    scripts:
+      - name: Get dependencies
+        script: flutter pub get
+
+      - name: Analyze code
+        script: flutter analyze
+
+      - name: Run tests
+        script: flutter test
+
+      - name: Build APK (RELEASE)
+        script: flutter build apk --release
