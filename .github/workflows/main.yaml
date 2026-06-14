@@ -38,9 +38,12 @@ jobs:
           cd ..
           zip -r app.ipa Payload
 
-      - name: Push to Releases
+      - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "build/app/outputs/apk/profile/*,build/ios/iphoneos/app.ipa"
-          tag: v1.0.${{ github.run_number }}-${{ github.event.inputs.branch_name }}
-          token: ${{ secrets.TOKEN }}
+            artifacts: build/app/outputs/apk/release/*.apk,build/ios/ipa/*.ipa
+            tag: v1.0.5-main
+            token: ${{ secrets.GITHUB_TOKEN }}
+            generateReleaseNotes: true
+            replacesArtifacts: true
+            makeLatest: true
