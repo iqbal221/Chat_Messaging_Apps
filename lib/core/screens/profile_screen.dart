@@ -37,7 +37,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: AppTheme.lightTheme.appBarTheme.backgroundColor,
         centerTitle: true,
         title: const Text("Profile", style: AppTextStyles.appBarTitle),
-        iconTheme: const IconThemeData(color: Colors.black),
       ),
 
       body: SingleChildScrollView(

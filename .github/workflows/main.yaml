@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       branch_name:
-        description: 'Branch to build from'
+        description: "Branch to build from"
         required: true
-        default: 'main'
+        default: "main"
 
 name: "Build & Release"
 jobs:
@@ -20,30 +20,28 @@ jobs:
 
       - uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
-          java-version: '17'
+          distribution: "zulu"
+          java-version: "17"
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.38.3'
-          channel: 'stable'
+          flutter-version: "3.38.3"
+          channel: "stable"
 
-      - run: flutter build apk --profile --split-per-abi
-      - run: |
-          flutter build ios --no-codesign
+      - run: flutter build apk --release
+      - run: flutter build ios --release --no-codesign
           cd build/ios/iphoneos
-          mkdir Payload
-          cd Payload
-          ln -s ../Runner.app
-          cd ..
+          mkdir -p Payload
+          cp -r Runner.app Payload/
           zip -r app.ipa Payload
 
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-            artifacts: build/app/outputs/apk/release/*.apk,build/ios/ipa/*.ipa
-            tag: v1.0.5-main
-            token: ${{ secrets.GITHUB_TOKEN }}
-            generateReleaseNotes: true
-            replacesArtifacts: true
-            makeLatest: true
+          artifacts: build/app/outputs/flutter-apk/*.apk
+            build/ios/iphoneos/app.ipa
+          tag: v1.0.5-main
+          token: ${{ secrets.TOKEN }}
+          generateReleaseNotes: true
+          replacesArtifacts: true
+          makeLatest: true

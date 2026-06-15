@@ -572,7 +572,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 color: isDeleted
                     ? Colors.white
                     : isMe
-                    ? Colors.blue.shade300
+                    ? Colors.blue.shade200
                     : Colors.white,
 
                 borderRadius: BorderRadius.only(
@@ -604,7 +604,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       color: isDeleted
                           ? Colors.grey.shade700
                           : isMe
-                          ? Colors.white
+                          ? Colors.black
                           : Colors.black,
 
                       fontSize: 15,
