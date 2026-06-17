@@ -24,43 +24,6 @@ class _AddNewContactScreenState extends State<AddNewContactScreen> {
   String completePhoneNumber = '';
   bool isLoading = false;
 
-  // Future<void> saveContact() async {
-  //   final uid = FirebaseAuth.instance.currentUser!.uid;
-
-  //   if (firstNameController.text.trim().isEmpty ||
-  //       completePhoneNumber.isEmpty) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(content: Text('First name and phone number required')),
-  //     );
-  //     return;
-  //   }
-
-  //   try {
-  //     await FirebaseFirestore.instance
-  //         .collection('users')
-  //         .doc(uid)
-  //         .collection('contacts')
-  //         .add({
-  //           'firstName': firstNameController.text.trim(),
-  //           'lastName': lastNameController.text.trim(),
-  //           'phoneNumber': completePhoneNumber,
-  //           'createdAt': Timestamp.now(),
-  //         });
-
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(content: Text('Contact Added Successfully')),
-  //     );
-
-  //     Navigator.pop(context);
-  //   } catch (e) {
-  //     debugPrint("ERROR: $e");
-
-  //     ScaffoldMessenger.of(
-  //       context,
-  //     ).showSnackBar(SnackBar(content: Text(e.toString())));
-  //   }
-  // }
-
   Future<void> saveContact() async {
     final currentUid = FirebaseAuth.instance.currentUser!.uid;
 
