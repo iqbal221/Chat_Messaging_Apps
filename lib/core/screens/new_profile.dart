@@ -6,6 +6,7 @@ import 'package:chat_messaging/core/screens/main_nav_bar.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -30,6 +31,19 @@ class _NewUserProfileScreenState extends State<NewUserProfileScreen> {
   final String cloudName = "deuky2rb8";
   final String uploadPreset = "chat_app_unsigned";
 
+  Future<String> getFcmToken() async {
+    final messaging = FirebaseMessaging.instance;
+
+    await messaging.requestPermission();
+
+    final token = await messaging.getToken();
+
+    print("FCM TOKEN: $token");
+
+    return token ?? "";
+  }
+
+  // image picker
   Future<void> pickImage() async {
     final picker = ImagePicker();
 
@@ -83,12 +97,14 @@ class _NewUserProfileScreenState extends State<NewUserProfileScreen> {
       final uid = FirebaseAuth.instance.currentUser!.uid;
 
       String imageUrl = "";
+      final fcmToken = await getFcmToken();
 
       // ✅ Upload image using Cloudinary
       if (imageFile != null) {
         imageUrl = await uploadToCloudinary(imageFile!);
         debugPrint("CLOUDINARY URL: $imageUrl");
       }
+      print(imageUrl);
 
       // ✅ Save to Firestore
       await FirebaseFirestore.instance.collection('users').doc(uid).set({
@@ -96,7 +112,7 @@ class _NewUserProfileScreenState extends State<NewUserProfileScreen> {
         'lastName': lastNameController.text.trim(),
         'profileImage': imageUrl,
         'phoneNumber': FirebaseAuth.instance.currentUser?.phoneNumber ?? '',
-        "fcmToken": "",
+        "fcmToken": fcmToken,
         'createdAt': FieldValue.serverTimestamp(),
       });
 

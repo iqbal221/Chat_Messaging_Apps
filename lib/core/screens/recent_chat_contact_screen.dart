@@ -190,6 +190,7 @@ class _RecentChatScreenState extends State<RecentChatScreen> {
                         final firstName = userData["firstName"] ?? "";
                         final lastName = userData["lastName"] ?? "";
                         final phoneNumber = userData["phoneNumber"] ?? "";
+                        final imageUrl = userData["profileImage"] ?? "";
 
                         final fullName = "$firstName $lastName".trim();
 
@@ -204,12 +205,17 @@ class _RecentChatScreenState extends State<RecentChatScreen> {
 
                         return ListTile(
                           leading: CircleAvatar(
-                            radius: 24,
-                            child: Text(
-                              fullName.isNotEmpty
-                                  ? fullName[0].toUpperCase()
-                                  : "?",
-                            ),
+                            backgroundColor: Colors.blue.shade100,
+                            backgroundImage: imageUrl.isNotEmpty
+                                ? NetworkImage(imageUrl)
+                                : null,
+                            child: imageUrl.isEmpty
+                                ? Text(
+                                    firstName.isNotEmpty
+                                        ? firstName[0].toUpperCase()
+                                        : "?",
+                                  )
+                                : null,
                           ),
                           title: Text(
                             fullName.isNotEmpty ? fullName : phoneNumber,
@@ -238,7 +244,7 @@ class _RecentChatScreenState extends State<RecentChatScreen> {
                                 builder: (_) => ChatScreen(
                                   receiverId: receiverId,
                                   receiverName: fullName,
-                                  receiverImage: "",
+                                  receiverImage: imageUrl,
                                 ),
                               ),
                             );

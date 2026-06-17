@@ -14,12 +14,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   // AUTO CHECK LOGIN
-  //   Future.microtask(() => checkAuthStatus());
-  // }
+  @override
+  void initState() {
+    super.initState();
+    // AUTO CHECK LOGIN
+    Future.microtask(() => checkAuthStatus());
+  }
 
   Future<void> checkAuthStatus() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -60,10 +60,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(height: 30),
             ElevatedButton(
-              onPressed: checkAuthStatus,
-              // () {
-              //   Navigator.pushNamed(context, PhoneNumberScreen.name);
-              // },
+              // onPressed: checkAuthStatus,
+              onPressed: () {
+                Navigator.pushNamed(context, PhoneNumberScreen.name);
+              },
               child: const Text(
                 'Start Messaging',
                 style: TextStyle(fontSize: 20, letterSpacing: 1.5),

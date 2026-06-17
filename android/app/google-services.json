@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "782601360703",
+    "project_id": "auth-router-context-36be7",
+    "storage_bucket": "auth-router-context-36be7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:782601360703:android:78916f0ebb80668ee4af8a",
+        "android_client_info": {
+          "package_name": "com.zahed.chat_messaging"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "782601360703-5majdi3nbqf0tga4ujtsbro26ljus1s7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zahed.chat_messaging",
+            "certificate_hash": "2eb33849f459cac7ef136869d9725bed8b18430f"
+          }
+        },
+        {
+          "client_id": "782601360703-o80na9cl1ih87q1fk7uj72qctldalsng.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwyXAbtPFkoVzb0bA33eiI28vc12GbHVc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "782601360703-o80na9cl1ih87q1fk7uj72qctldalsng.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "782601360703-ch1268esjhkr900m5epndn6n9asiol01.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.chatMessaging"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:782601360703:android:28f611fa7aae0585e4af8a",
+        "android_client_info": {
+          "package_name": "com.zahed.chatmessaging"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "782601360703-n8045ju5u4us6ld9ue9tq347q94480u6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zahed.chatmessaging",
+            "certificate_hash": "2eb33849f459cac7ef136869d9725bed8b18430f"
+          }
+        },
+        {
+          "client_id": "782601360703-o80na9cl1ih87q1fk7uj72qctldalsng.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwyXAbtPFkoVzb0bA33eiI28vc12GbHVc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "782601360703-o80na9cl1ih87q1fk7uj72qctldalsng.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "782601360703-ch1268esjhkr900m5epndn6n9asiol01.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.chatMessaging"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

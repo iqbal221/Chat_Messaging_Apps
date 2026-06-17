@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:chat_messaging/core/constants/app_text_styles.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -10,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'dart:io';
 import 'package:open_filex/open_filex.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ChatScreen extends StatefulWidget {
   final String receiverId;
@@ -164,6 +166,28 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
+  // download file to temp directory and open it
+  Future<void> downloadAndOpen(String url, String fileName) async {
+    try {
+      final dir = await getApplicationDocumentsDirectory();
+
+      // ✅ force safe file name
+      final safeName = fileName.contains('.') ? fileName : '$fileName.pdf';
+
+      final path = '${dir.path}/$safeName';
+
+      // download
+      await Dio().download(url, path);
+
+      // open
+      final result = await OpenFilex.open(path);
+
+      print("OPEN RESULT: ${result.type}");
+    } catch (e) {
+      print("PDF OPEN ERROR: $e");
+    }
+  }
+
   /// ================= DELETE FOR EVERYONE =================
   Future<void> deleteForEveryone(String messageId) async {
     final chatId = getChatId();
@@ -232,7 +256,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 color: Colors.white, // Border color
               ),
               child: CircleAvatar(
-                radius: 12,
+                radius: 16,
                 backgroundImage: widget.receiverImage.isNotEmpty
                     ? NetworkImage(widget.receiverImage)
                     : null,
@@ -427,7 +451,7 @@ class _ChatScreenState extends State<ChatScreen> {
           if (fileUrl != null && fileType == "image")
             GestureDetector(
               onTap: () {
-                OpenFilex.open(fileUrl);
+                downloadAndOpen(fileUrl, fileName ?? "file.image");
               },
               child: Container(
                 margin: const EdgeInsets.symmetric(vertical: 4),
@@ -449,7 +473,11 @@ class _ChatScreenState extends State<ChatScreen> {
           if (fileUrl != null && fileType == "pdf")
             GestureDetector(
               onTap: () {
-                // OPEN PDF
+                downloadAndOpen(
+                  fileUrl,
+                  fileName ??
+                      "file_${DateTime.now().millisecondsSinceEpoch}.pdf",
+                );
               },
 
               child: Container(
@@ -506,7 +534,7 @@ class _ChatScreenState extends State<ChatScreen> {
           if (fileUrl != null && fileType != "image" && fileType != "pdf")
             GestureDetector(
               onTap: () {
-                OpenFilex.open(fileUrl);
+                downloadAndOpen(fileUrl, fileName ?? "file.pdf");
               },
 
               child: Container(
@@ -572,7 +600,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 color: isDeleted
                     ? Colors.white
                     : isMe
-                    ? Colors.blue.shade200
+                    ? Colors.blue.shade100
                     : Colors.white,
 
                 borderRadius: BorderRadius.only(
@@ -604,7 +632,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       color: isDeleted
                           ? Colors.grey.shade700
                           : isMe
-                          ? Colors.black
+                          ? Colors.grey.shade800
                           : Colors.black,
 
                       fontSize: 15,
@@ -620,7 +648,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       color: isDeleted
                           ? Colors.grey
                           : isMe
-                          ? Colors.white70
+                          ? Colors.grey
                           : Colors.grey,
 
                       fontSize: 11,

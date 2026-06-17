@@ -24,40 +24,118 @@ class _AddNewContactScreenState extends State<AddNewContactScreen> {
   String completePhoneNumber = '';
   bool isLoading = false;
 
-  Future<void> saveContact() async {
-    final uid = FirebaseAuth.instance.currentUser!.uid;
+  // Future<void> saveContact() async {
+  //   final uid = FirebaseAuth.instance.currentUser!.uid;
 
-    if (firstNameController.text.trim().isEmpty ||
-        completePhoneNumber.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('First name and phone number required')),
-      );
+  //   if (firstNameController.text.trim().isEmpty ||
+  //       completePhoneNumber.isEmpty) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text('First name and phone number required')),
+  //     );
+  //     return;
+  //   }
+
+  //   try {
+  //     await FirebaseFirestore.instance
+  //         .collection('users')
+  //         .doc(uid)
+  //         .collection('contacts')
+  //         .add({
+  //           'firstName': firstNameController.text.trim(),
+  //           'lastName': lastNameController.text.trim(),
+  //           'phoneNumber': completePhoneNumber,
+  //           'createdAt': Timestamp.now(),
+  //         });
+
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text('Contact Added Successfully')),
+  //     );
+
+  //     Navigator.pop(context);
+  //   } catch (e) {
+  //     debugPrint("ERROR: $e");
+
+  //     ScaffoldMessenger.of(
+  //       context,
+  //     ).showSnackBar(SnackBar(content: Text(e.toString())));
+  //   }
+  // }
+
+  Future<void> saveContact() async {
+    final currentUid = FirebaseAuth.instance.currentUser!.uid;
+
+    if (completePhoneNumber.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Phone number required')));
       return;
     }
 
     try {
+      setState(() => isLoading = true);
+
+      final userQuery = await FirebaseFirestore.instance
+          .collection('users')
+          .where('phoneNumber', isEqualTo: completePhoneNumber.trim())
+          .limit(1)
+          .get();
+
+      if (userQuery.docs.isEmpty) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('User not registered')));
+        return;
+      }
+
+      final userDoc = userQuery.docs.first;
+
+      if (userDoc.id == currentUid) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text("You can't add yourself")));
+        return;
+      }
+
+      final existingContact = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUid)
+          .collection('contacts')
+          .where('receiverId', isEqualTo: userDoc.id)
+          .get();
+
+      if (existingContact.docs.isNotEmpty) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Contact already added')));
+        return;
+      }
+
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(uid)
+          .doc(currentUid)
           .collection('contacts')
           .add({
-            'firstName': firstNameController.text.trim(),
-            'lastName': lastNameController.text.trim(),
-            'phoneNumber': completePhoneNumber,
-            'createdAt': Timestamp.now(),
+            'receiverId': userDoc.id,
+            'createdAt': FieldValue.serverTimestamp(),
           });
 
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Contact Added Successfully')),
+        const SnackBar(content: Text('Contact added successfully')),
       );
 
       Navigator.pop(context);
     } catch (e) {
-      debugPrint("ERROR: $e");
+      debugPrint(e.toString());
 
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(e.toString())));
+    } finally {
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
     }
   }
 

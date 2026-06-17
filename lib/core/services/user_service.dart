@@ -1,17 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserService {
-  static Future<String?> getUserIdByPhone(String phone) async {
-    final result = await FirebaseFirestore.instance
+  static Future<Map<String, dynamic>?> getUserByPhone(
+    String phoneNumber,
+  ) async {
+    final snapshot = await FirebaseFirestore.instance
         .collection('users')
-        .where('phoneNumber', isEqualTo: phone)
+        .where('phoneNumber', isEqualTo: phoneNumber)
         .limit(1)
         .get();
 
-    if (result.docs.isNotEmpty) {
-      return result.docs.first.id;
+    if (snapshot.docs.isEmpty) {
+      return null;
     }
 
-    return null;
+    return snapshot.docs.first.data();
   }
 }
