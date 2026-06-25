@@ -242,21 +242,31 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppTheme.lightTheme.scaffoldBackgroundColor,
+      backgroundColor: isDark
+          ? AppTheme.darkTheme.primaryColorLight
+          : AppTheme.lightTheme.scaffoldBackgroundColor,
 
       appBar: AppBar(
-        backgroundColor: AppTheme.lightTheme.appBarTheme.backgroundColor,
+        toolbarHeight: 70,
+        backgroundColor: isDark
+            ? AppTheme.darkTheme.appBarTheme.backgroundColor
+            : AppTheme.lightTheme.appBarTheme.backgroundColor,
+
         title: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(2), // Border thickness
+              padding: const EdgeInsets.symmetric(
+                vertical: 6,
+              ), // Border thickness
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.white, // Border color
               ),
               child: CircleAvatar(
-                radius: 16,
+                radius: 20,
                 backgroundImage: widget.receiverImage.isNotEmpty
                     ? NetworkImage(widget.receiverImage)
                     : null,
@@ -265,7 +275,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     : null,
               ),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 12),
             Text(widget.receiverName, style: AppTextStyles.displayLarge),
           ],
         ),
@@ -340,12 +350,12 @@ class _ChatScreenState extends State<ChatScreen> {
                             child: Center(
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 6,
+                                  horizontal: 11,
+                                  vertical: 5,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.grey.shade200,
-                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.grey.shade300,
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Text(
                                   getDateLabel(messageTime),
@@ -402,7 +412,7 @@ class _ChatScreenState extends State<ChatScreen> {
           child: Wrap(
             children: [
               ListTile(
-                leading: const Icon(Icons.delete_outline, color: Colors.orange),
+                leading: const Icon(Icons.delete_outline, color: Colors.red),
                 title: const Text("Delete for me"),
                 onTap: () {
                   Navigator.pop(context);
@@ -436,6 +446,7 @@ class _ChatScreenState extends State<ChatScreen> {
     String? fileType,
   ) {
     final bool isFileMessage = fileUrl != null;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
@@ -457,12 +468,12 @@ class _ChatScreenState extends State<ChatScreen> {
                 margin: const EdgeInsets.symmetric(vertical: 4),
 
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(10),
 
                   child: Image.network(
                     fileUrl,
                     height: 220,
-                    width: 220,
+                    width: 210,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -485,11 +496,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
                 margin: const EdgeInsets.symmetric(vertical: 4),
 
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(6),
 
                 decoration: BoxDecoration(
                   color: Colors.red.shade50,
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(10),
                 ),
 
                 child: Row(
@@ -513,7 +524,10 @@ class _ChatScreenState extends State<ChatScreen> {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
 
-                            style: const TextStyle(fontWeight: FontWeight.w600),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
                           ),
 
                           const SizedBox(height: 4),
@@ -598,10 +612,18 @@ class _ChatScreenState extends State<ChatScreen> {
 
               decoration: BoxDecoration(
                 color: isDeleted
-                    ? Colors.white
+                    ? (isDark
+                          ? AppTheme.darkTheme.primaryColorDark
+                          : Colors.white)
                     : isMe
-                    ? Colors.blue.shade100
-                    : Colors.white,
+                    ? (isDark
+                          ? Color(0xFF375FFF) // WhatsApp Dark Sent Bubble
+                          : AppTheme.lightTheme.primaryColorLight)
+                    : (isDark
+                          ? AppTheme
+                                .darkTheme
+                                .primaryColorDark // WhatsApp Dark Received Bubble
+                          : Colors.white),
 
                 borderRadius: BorderRadius.only(
                   topLeft: const Radius.circular(16),
@@ -623,17 +645,21 @@ class _ChatScreenState extends State<ChatScreen> {
 
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
-
                 children: [
                   Text(
                     message,
-
                     style: TextStyle(
                       color: isDeleted
-                          ? Colors.grey.shade700
+                          ? isDark
+                                ? Colors.grey.shade400
+                                : Colors.grey.shade500
                           : isMe
-                          ? Colors.grey.shade800
-                          : Colors.black,
+                          ? isDark
+                                ? Colors.white
+                                : Colors.grey.shade700
+                          : isDark
+                          ? Colors.white
+                          : Colors.grey.shade700,
 
                       fontSize: 15,
                     ),
@@ -643,12 +669,13 @@ class _ChatScreenState extends State<ChatScreen> {
 
                   Text(
                     time,
-
                     style: TextStyle(
                       color: isDeleted
                           ? Colors.grey
                           : isMe
-                          ? Colors.grey
+                          ? isDark
+                                ? Colors.grey.shade300
+                                : Colors.grey
                           : Colors.grey,
 
                       fontSize: 11,
@@ -677,10 +704,11 @@ class _ChatScreenState extends State<ChatScreen> {
   /// ================= INPUT =================
 
   Widget _buildInputBox() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
 
-      color: Colors.white,
+      color: isDark ? AppTheme.darkTheme.primaryColorDark : Colors.white,
 
       child: Row(
         children: [
@@ -709,7 +737,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
             child: Container(
               padding: const EdgeInsets.all(10),
-
               decoration: BoxDecoration(
                 color: AppTheme.lightTheme.primaryColor,
                 shape: BoxShape.circle,

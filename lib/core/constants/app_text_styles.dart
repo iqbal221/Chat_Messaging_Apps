@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppTextStyles {
   static const TextStyle appBarTitle = TextStyle(
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: FontWeight.bold,
     color: Colors.white,
   );
@@ -23,8 +23,8 @@ class AppTextStyles {
   );
 
   static const TextStyle displayLarge = TextStyle(
-    fontSize: 24,
-    fontWeight: FontWeight.bold,
+    fontSize: 22,
+    fontWeight: FontWeight.w400,
   );
 
   static const TextStyle displaySmall = TextStyle(

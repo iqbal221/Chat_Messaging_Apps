@@ -1,7 +1,7 @@
 import 'package:chat_messaging/core/constants/app_text_styles.dart';
-import 'package:chat_messaging/core/providers/auth_provider.dart';
-import 'package:chat_messaging/core/screens/input_phone_screen.dart';
-import 'package:chat_messaging/core/screens/update_profile.dart';
+import 'package:chat_messaging/features/auth/providers/auth_provider.dart';
+import 'package:chat_messaging/features/auth/presentation/screens/input_phone_screen.dart';
+import 'package:chat_messaging/features/profiles/presentation/screens/update_profile.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -29,12 +29,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppTheme.lightTheme.scaffoldBackgroundColor,
+      backgroundColor: isDark
+          ? AppTheme.darkTheme.scaffoldBackgroundColor
+          : AppTheme.lightTheme.scaffoldBackgroundColor,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: AppTheme.lightTheme.appBarTheme.backgroundColor,
+        backgroundColor: isDark
+            ? AppTheme.darkTheme.appBarTheme.backgroundColor
+            : AppTheme.lightTheme.appBarTheme.backgroundColor,
         centerTitle: true,
         title: const Text("Profile", style: AppTextStyles.appBarTitle),
       ),
@@ -99,7 +104,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               // PHONE (DYNAMIC)
               Text(
                 userProvider.phoneNumber,
-                style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
+                style: TextStyle(fontSize: 16, color: Colors.grey.shade500),
               ),
 
               const SizedBox(height: 30),
@@ -185,25 +190,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Color iconColor = Colors.black,
     Color textColor = Colors.black,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bool isLogout = title == "Logout";
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: Material(
-        color: Colors.white,
+        color: isDark
+            ? AppTheme.darkTheme.primaryColorLight
+            : AppTheme.lightTheme.cardColor,
         borderRadius: BorderRadius.circular(16),
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
           onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
             child: Row(
               children: [
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
+                    color: isDark
+                        ? AppTheme.darkTheme.primaryColorDark
+                        : Colors.white,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(icon, color: iconColor),
+                  child: Icon(
+                    icon,
+                    color: isLogout
+                        ? Colors.red
+                        : (isDark ? Colors.white : iconColor),
+                  ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -212,7 +229,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color: textColor,
+                      color: isDark ? Colors.white : textColor,
                     ),
                   ),
                 ),

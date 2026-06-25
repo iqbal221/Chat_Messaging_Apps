@@ -1,8 +1,8 @@
-import 'package:chat_messaging/core/screens/recent_chat_contact_screen.dart';
+import 'package:chat_messaging/features/chat/presentation/screens/recent_chat_contact_screen.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:chat_messaging/core/screens/contact_screen.dart';
-import 'package:chat_messaging/core/screens/profile_screen.dart';
+import 'package:chat_messaging/features/contacts/presentation/screens/contact_screen.dart';
+import 'package:chat_messaging/features/profiles/presentation/screens/profile_screen.dart';
 
 class MainNavBarScreen extends StatefulWidget {
   final int initialIndex;

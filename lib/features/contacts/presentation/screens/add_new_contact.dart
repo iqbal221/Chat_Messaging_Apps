@@ -104,12 +104,17 @@ class _AddNewContactScreenState extends State<AddNewContactScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: AppTheme.lightTheme.scaffoldBackgroundColor,
+      backgroundColor: isDark
+          ? AppTheme.darkTheme.scaffoldBackgroundColor
+          : AppTheme.lightTheme.scaffoldBackgroundColor,
 
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: AppTheme.lightTheme.appBarTheme.backgroundColor,
+        backgroundColor: isDark
+            ? AppTheme.darkTheme.appBarTheme.backgroundColor
+            : AppTheme.lightTheme.appBarTheme.backgroundColor,
         title: const Text("Add New Contact", style: AppTextStyles.appBarTitle),
       ),
 
@@ -125,13 +130,8 @@ class _AddNewContactScreenState extends State<AddNewContactScreen> {
 
               decoration: InputDecoration(
                 hintText: "First Name",
-                filled: true,
-                fillColor: Colors.white,
 
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
-                  borderSide: BorderSide.none,
-                ),
+                border: OutlineInputBorder(),
               ),
             ),
 
@@ -143,13 +143,8 @@ class _AddNewContactScreenState extends State<AddNewContactScreen> {
 
               decoration: InputDecoration(
                 hintText: "Last Name",
-                filled: true,
-                fillColor: Colors.white,
 
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
-                  borderSide: BorderSide.none,
-                ),
+                border: OutlineInputBorder(),
               ),
             ),
 
@@ -162,13 +157,8 @@ class _AddNewContactScreenState extends State<AddNewContactScreen> {
 
               decoration: InputDecoration(
                 hintText: "Mobile Number",
-                filled: true,
-                fillColor: Colors.white,
 
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
-                  borderSide: BorderSide.none,
-                ),
+                border: OutlineInputBorder(),
               ),
 
               onChanged: (phone) {

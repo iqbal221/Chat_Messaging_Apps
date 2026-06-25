@@ -1,9 +1,9 @@
-import 'package:chat_messaging/core/providers/auth_provider.dart';
+import 'package:chat_messaging/features/auth/providers/auth_provider.dart';
 import 'package:chat_messaging/core/routes/app_routes.dart';
-import 'package:chat_messaging/core/services/notification_service.dart';
+import 'package:chat_messaging/core/firebase/notification_service.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
 import 'package:chat_messaging/core/theme/theme_provider.dart';
-import 'package:chat_messaging/core/screens/home_screen.dart';
+import 'package:chat_messaging/features/home/presentation/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -14,7 +14,8 @@ class AppTheme {
       foregroundColor: Colors.white,
     ),
 
-    primaryColor: const Color(0xFF2196F3),
+    primaryColor: Color(0xFF2196F3),
+    primaryColorLight: const Color(0xFFE3F2FD),
     hintColor: Colors.white,
 
     colorScheme: const ColorScheme.light(
@@ -36,6 +37,7 @@ class AppTheme {
         backgroundColor: const Color(0xFF2196F3),
         foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        textStyle: const TextStyle(fontSize: 20, letterSpacing: 1.2),
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 80),
       ),
     ),
@@ -48,11 +50,11 @@ class AppTheme {
       hintStyle: const TextStyle(color: Colors.grey),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(10),
         borderSide: BorderSide.none,
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(10),
         borderSide: BorderSide.none,
       ),
     ),
@@ -66,16 +68,17 @@ class AppTheme {
   /// CHAT APP DARK THEME
   static ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
-    scaffoldBackgroundColor: const Color(0xFF0F1C1B),
+    scaffoldBackgroundColor: const Color(0xFF0F1828),
 
     appBarTheme: const AppBarTheme(
       elevation: 0,
       centerTitle: true,
-      backgroundColor: Color(0xFF2196F3),
+      backgroundColor: Color(0xFF0F1828),
       foregroundColor: Colors.white,
     ),
 
-    primaryColor: const Color(0xFF2196F3),
+    primaryColorDark: const Color(0xFF0F1828),
+    primaryColorLight: const Color(0xFF152033),
     hintColor: const Color(0xFFE5E5E5),
 
     colorScheme: const ColorScheme.dark(
@@ -96,24 +99,25 @@ class AppTheme {
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFF2196F3),
         foregroundColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        textStyle: const TextStyle(fontSize: 20, letterSpacing: 1.2),
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 80),
       ),
     ),
 
     iconTheme: const IconThemeData(color: Colors.white),
 
     inputDecorationTheme: InputDecorationTheme(
-      fillColor: const Color(0xFF1F2C2B),
+      fillColor: const Color(0xFF152033),
       filled: true,
       hintStyle: const TextStyle(color: Colors.white54),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(10),
         borderSide: BorderSide.none,
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(10),
         borderSide: BorderSide.none,
       ),
     ),

@@ -1,6 +1,7 @@
+import 'package:chat_messaging/common/widget/dark_light_theme_button.dart';
 import 'package:chat_messaging/core/constants/app_text_styles.dart';
-import 'package:chat_messaging/core/screens/add_new_contact.dart';
-import 'package:chat_messaging/core/screens/chat_screen.dart';
+import 'package:chat_messaging/features/contacts/presentation/screens/add_new_contact.dart';
+import 'package:chat_messaging/features/chat/presentation/screens/chat_screen.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -49,9 +50,18 @@ class _RecentChatScreenState extends State<RecentChatScreen> {
         .orderBy("updatedAt", descending: true)
         .snapshots();
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
+      backgroundColor: isDark
+          ? AppTheme.darkTheme.scaffoldBackgroundColor
+          : AppTheme.lightTheme.scaffoldBackgroundColor,
+
       appBar: AppBar(
-        title: const Text("Recent Chats", style: AppTextStyles.appBarTitle),
+        backgroundColor: isDark
+            ? AppTheme.darkTheme.appBarTheme.backgroundColor
+            : AppTheme.lightTheme.appBarTheme.backgroundColor,
+        title: const Text("Chats", style: AppTextStyles.appBarTitle),
       ),
 
       /// ================= FLOATING BUTTON =================
@@ -66,7 +76,7 @@ class _RecentChatScreenState extends State<RecentChatScreen> {
       body: Column(
         children: [
           /// 🔍 SEARCH BOX (TOP OF BODY)
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             child: TextField(
@@ -77,16 +87,10 @@ class _RecentChatScreenState extends State<RecentChatScreen> {
                 });
               },
               decoration: InputDecoration(
-                hintText: "Search by name or phone...",
+                hintText: "Search here",
                 prefixIcon: const Icon(Icons.search),
                 filled: true,
-                fillColor: Colors.white,
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(
-                    color: Colors.white70, // 👈 normal border color
-                  ),
-                ),
+                fillColor: Theme.of(context).inputDecorationTheme.fillColor,
               ),
             ),
           ),
@@ -156,8 +160,10 @@ class _RecentChatScreenState extends State<RecentChatScreen> {
                 );
 
                 return ListView.builder(
-                  padding: const EdgeInsets.only(top: 8),
+                  padding: const EdgeInsets.only(top: 10),
+
                   itemCount: uniqueChats.length,
+
                   itemBuilder: (context, index) {
                     final chatData =
                         uniqueChats[index]["chat"] as Map<String, dynamic>;
@@ -203,52 +209,82 @@ class _RecentChatScreenState extends State<RecentChatScreen> {
                           return const SizedBox.shrink();
                         }
 
-                        return ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: Colors.blue.shade100,
-                            backgroundImage: imageUrl.isNotEmpty
-                                ? NetworkImage(imageUrl)
-                                : null,
-                            child: imageUrl.isEmpty
-                                ? Text(
-                                    firstName.isNotEmpty
-                                        ? firstName[0].toUpperCase()
-                                        : "?",
-                                  )
-                                : null,
-                          ),
-                          title: Text(
-                            fullName.isNotEmpty ? fullName : phoneNumber,
-                            style: const TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                          subtitle: Text(
-                            lastMessage,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          trailing: Text(
-                            formatChatTime(updatedAt),
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => ChatScreen(
-                                  receiverId: receiverId,
-                                  receiverName: fullName,
-                                  receiverImage: imageUrl,
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 6.0),
+                          child: Column(
+                            children: [
+                              ListTile(
+                                leading: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Container(
+                                    width: 50,
+                                    height: 50,
+                                    color: Colors.blue.shade100,
+                                    child: imageUrl.isNotEmpty
+                                        ? Image.network(
+                                            imageUrl,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : Center(
+                                            child: Text(
+                                              firstName.isNotEmpty
+                                                  ? firstName[0].toUpperCase()
+                                                  : "?",
+                                            ),
+                                          ),
+                                  ),
                                 ),
+                                title: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      fullName.isNotEmpty
+                                          ? fullName
+                                          : phoneNumber,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 6),
+
+                                    Text(
+                                      lastMessage,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w300,
+                                        color: isDark
+                                            ? Color(0xFFADB5BD)
+                                            : Colors.grey.shade900,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                trailing: Text(
+                                  formatChatTime(updatedAt),
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => ChatScreen(
+                                        receiverId: receiverId,
+                                        receiverName: fullName,
+                                        receiverImage: imageUrl,
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          },
+                            ],
+                          ),
                         );
                       },
                     );
