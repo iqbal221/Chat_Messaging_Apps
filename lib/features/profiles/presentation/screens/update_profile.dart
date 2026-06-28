@@ -109,25 +109,30 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
                   child: Stack(
                     children: [
                       Container(
-                        width: 120,
-                        height: 120,
+                        padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: Colors.blue, width: 3),
-                          image: DecorationImage(
-                            image: imageFile != null
-                                ? FileImage(imageFile!)
-                                : (provider.profileImage.isNotEmpty
-                                      ? NetworkImage(provider.profileImage)
-                                      : const AssetImage(
-                                              'assets/images/avatar.jpg',
-                                            )
-                                            as ImageProvider),
-                            fit: BoxFit.cover,
-                          ),
+                          color: isDark ? Colors.grey.shade900 : Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black,
+                              blurRadius: 12,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: CircleAvatar(
+                          radius: 56,
+                          backgroundImage: imageFile != null
+                              ? FileImage(imageFile!)
+                              : (provider.profileImage.isNotEmpty
+                                    ? NetworkImage(provider.profileImage)
+                                    : const AssetImage(
+                                            "assets/images/avatar.jpg",
+                                          )
+                                          as ImageProvider),
                         ),
                       ),
-
                       Positioned(
                         bottom: 0,
                         right: 0,

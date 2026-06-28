@@ -23,6 +23,7 @@ class NewUserProfileScreen extends StatefulWidget {
 class _NewUserProfileScreenState extends State<NewUserProfileScreen> {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
+  final phoneNumberController = TextEditingController();
 
   File? imageFile;
   bool isLoading = false;
@@ -111,7 +112,7 @@ class _NewUserProfileScreenState extends State<NewUserProfileScreen> {
         'firstName': firstNameController.text.trim(),
         'lastName': lastNameController.text.trim(),
         'profileImage': imageUrl,
-        'phoneNumber': FirebaseAuth.instance.currentUser?.phoneNumber ?? '',
+        'phoneNumber': phoneNumberController.text.trim(),
         "fcmToken": fcmToken,
         'createdAt': FieldValue.serverTimestamp(),
       });
@@ -136,11 +137,19 @@ class _NewUserProfileScreenState extends State<NewUserProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppTheme.lightTheme.scaffoldBackgroundColor,
+      backgroundColor: isDark
+          ? AppTheme.darkTheme.scaffoldBackgroundColor
+          : AppTheme.lightTheme.scaffoldBackgroundColor,
       appBar: AppBar(
+        elevation: 0,
+        backgroundColor: isDark
+            ? AppTheme.darkTheme.appBarTheme.backgroundColor
+            : AppTheme.lightTheme.appBarTheme.backgroundColor,
+        centerTitle: true,
         title: const Text("Create Profile", style: AppTextStyles.appBarTitle),
-        backgroundColor: AppTheme.lightTheme.appBarTheme.backgroundColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -157,7 +166,7 @@ class _NewUserProfileScreenState extends State<NewUserProfileScreen> {
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.blue,
+                      color: isDark ? Colors.black : Colors.blue,
                       border: Border.all(color: Colors.white, width: 2),
                     ),
                     child: Container(
@@ -204,32 +213,21 @@ class _NewUserProfileScreenState extends State<NewUserProfileScreen> {
 
             TextField(
               controller: firstNameController,
-              decoration: InputDecoration(
-                hintText: 'First Name (required)',
-                filled: true,
-                hintStyle: const TextStyle(color: Colors.grey),
-                fillColor: AppTheme.lightTheme.hintColor,
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 18,
-                  horizontal: 16,
-                ),
-              ),
+              decoration: InputDecoration(hintText: 'First Name (required)'),
             ),
 
             const SizedBox(height: 20),
 
             TextField(
               controller: lastNameController,
-              decoration: InputDecoration(
-                hintText: 'Last Name (optional)',
-                filled: true,
-                hintStyle: const TextStyle(color: Colors.grey),
-                fillColor: AppTheme.lightTheme.hintColor,
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 18,
-                  horizontal: 16,
-                ),
-              ),
+              decoration: InputDecoration(hintText: 'Last Name (optional)'),
+            ),
+
+            const SizedBox(height: 20),
+
+            TextField(
+              controller: phoneNumberController,
+              decoration: InputDecoration(hintText: 'Mobile Number (required)'),
             ),
 
             const Spacer(),

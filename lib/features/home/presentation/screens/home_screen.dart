@@ -1,6 +1,7 @@
 import 'package:chat_messaging/features/auth/presentation/screens/input_phone_screen.dart';
 import 'package:chat_messaging/core/screens/main_nav_bar.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
+import 'package:chat_messaging/features/auth/presentation/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -29,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (user != null) {
       Navigator.pushReplacementNamed(context, MainNavBarScreen.name);
     } else {
-      Navigator.pushReplacementNamed(context, PhoneNumberScreen.name);
+      Navigator.pushReplacementNamed(context, LoginScreen.name);
     }
   }
 

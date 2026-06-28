@@ -1,3 +1,5 @@
+import 'package:chat_messaging/features/auth/presentation/screens/login_screen.dart';
+import 'package:chat_messaging/features/auth/presentation/screens/registration_screen.dart';
 import 'package:chat_messaging/features/contacts/presentation/screens/add_new_contact.dart';
 import 'package:chat_messaging/features/chat/presentation/screens/chat_screen.dart';
 import 'package:chat_messaging/features/contacts/presentation/screens/contact_screen.dart';
@@ -35,6 +37,10 @@ class AppRoutes {
       widget = ContactScreen();
     } else if (settings.name == AddNewContactScreen.name) {
       widget = AddNewContactScreen();
+    } else if (settings.name == RegisterScreen.name) {
+      widget = RegisterScreen();
+    } else if (settings.name == LoginScreen.name) {
+      widget = LoginScreen();
     } else if (settings.name == ChatScreen.name) {
       final args = settings.arguments as Map?;
       widget = ChatScreen(

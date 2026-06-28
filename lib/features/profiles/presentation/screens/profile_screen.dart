@@ -1,6 +1,6 @@
 import 'package:chat_messaging/core/constants/app_text_styles.dart';
+import 'package:chat_messaging/features/auth/presentation/screens/login_screen.dart';
 import 'package:chat_messaging/features/auth/providers/auth_provider.dart';
-import 'package:chat_messaging/features/auth/presentation/screens/input_phone_screen.dart';
 import 'package:chat_messaging/features/profiles/presentation/screens/update_profile.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -59,7 +59,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     height: 120,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.blue, width: 3),
+                      border: isDark
+                          ? Border.all(color: Colors.grey.shade900)
+                          : Border.all(color: Colors.blue, width: 3),
                       image: DecorationImage(
                         image: userProvider.profileImage.isNotEmpty
                             ? NetworkImage(userProvider.profileImage)
@@ -169,7 +171,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     if (context.mounted) {
                       Navigator.pushNamedAndRemoveUntil(
                         context,
-                        PhoneNumberScreen.name,
+                        LoginScreen.name,
                         (route) => false,
                       );
                     }
@@ -229,7 +231,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color: isDark ? Colors.white : textColor,
+                      color: isLogout
+                          ? Colors.red
+                          : isDark
+                          ? Colors.white
+                          : textColor,
                     ),
                   ),
                 ),
