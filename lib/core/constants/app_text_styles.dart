@@ -1,57 +1,30 @@
-import 'package:flutter/material.dart';
+import 'dart:ui';
+
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTextStyles {
-  static const TextStyle appBarTitle = TextStyle(
-    fontSize: 22,
-    fontWeight: FontWeight.bold,
-    color: Colors.white,
+  static final displayLarge = GoogleFonts.inter(
+    fontSize: 28,
+    fontWeight: FontWeight.w700,
   );
 
-  /// Display Text (Calculator Screen)
-  static const TextStyle titleLarge = TextStyle(
-    fontSize: 30,
-    fontWeight: FontWeight.bold,
-  );
-  static const TextStyle titleSmall = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.bold,
-  );
-
-  static const TextStyle bodyLarge = TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.bold,
-  );
-
-  static const TextStyle displayLarge = TextStyle(
-    fontSize: 22,
+  static final displaySmall = GoogleFonts.inter(
+    fontSize: 15,
     fontWeight: FontWeight.w400,
   );
 
-  static const TextStyle displaySmall = TextStyle(
-    fontSize: 18,
-    fontWeight: FontWeight.bold,
-  );
-
-  /// Button Text
-  static const TextStyle buttonText = TextStyle(
-    fontSize: 14,
+  static final titleLarge = GoogleFonts.inter(
+    fontSize: 20,
     fontWeight: FontWeight.w600,
   );
 
-  /// Operator Button Text
-  static const TextStyle operatorText = TextStyle(
-    fontSize: 22,
-    fontWeight: FontWeight.bold,
-  );
-
-  /// History Text
-  static const TextStyle historyExpression = TextStyle(
+  static final titleSmall = GoogleFonts.inter(
     fontSize: 16,
     fontWeight: FontWeight.w500,
   );
 
-  static const TextStyle historyResult = TextStyle(
-    fontSize: 18,
-    fontWeight: FontWeight.bold,
+  static final buttonText = GoogleFonts.inter(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
   );
 }

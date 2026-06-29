@@ -31,12 +31,6 @@ class UserProvider extends ChangeNotifier {
         phoneNumber = data['phoneNumber'] ?? '';
         profileImage = data['profileImage'] ?? '';
         email = data['email'] ?? '';
-
-        debugPrint(firstName);
-        debugPrint(lastName);
-        debugPrint(phoneNumber);
-        debugPrint(profileImage);
-        debugPrint(email);
       }
     } catch (e) {
       debugPrint(e.toString());

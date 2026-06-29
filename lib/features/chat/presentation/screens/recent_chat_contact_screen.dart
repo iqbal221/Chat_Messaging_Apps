@@ -1,4 +1,3 @@
-import 'package:chat_messaging/common/widget/dark_light_theme_button.dart';
 import 'package:chat_messaging/core/constants/app_text_styles.dart';
 import 'package:chat_messaging/features/contacts/presentation/screens/add_new_contact.dart';
 import 'package:chat_messaging/features/chat/presentation/screens/chat_screen.dart';
@@ -61,7 +60,7 @@ class _RecentChatScreenState extends State<RecentChatScreen> {
         backgroundColor: isDark
             ? AppTheme.darkTheme.appBarTheme.backgroundColor
             : AppTheme.lightTheme.appBarTheme.backgroundColor,
-        title: const Text("Chats", style: AppTextStyles.appBarTitle),
+        title: Text("Chats", style: AppTextStyles.titleLarge),
       ),
 
       /// ================= FLOATING BUTTON =================

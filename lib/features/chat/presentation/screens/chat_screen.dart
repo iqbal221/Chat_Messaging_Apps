@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:chat_messaging/core/constants/app_text_styles.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
 import 'package:chat_messaging/features/chat/presentation/widgets/chat_bubble.dart';
+import 'package:chat_messaging/features/chat/presentation/widgets/message_option.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -201,7 +202,9 @@ class _ChatScreenState extends State<ChatScreen> {
         .update({
           'text': 'This message was deleted',
           'isDeleted': true,
-          'imageUrl': null, // optional if you support images
+          'fileUrl': null,
+          'fileName': null,
+          'fileType': null,
           'deletedAt': FieldValue.serverTimestamp(),
         });
   }
@@ -277,7 +280,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
             const SizedBox(width: 12),
-            Text(widget.receiverName, style: AppTextStyles.displayLarge),
+            Text(widget.receiverName, style: AppTextStyles.titleLarge),
           ],
         ),
       ),
@@ -373,9 +376,12 @@ class _ChatScreenState extends State<ChatScreen> {
                         /// ✅ MESSAGE BUBBLE
                         GestureDetector(
                           onLongPress: () {
-                            _showMessageOptions(
-                              messageId: messageId,
+                            showMessageOptions(
+                              context: context,
                               isMe: isMe,
+                              onDeleteForMe: () => deleteForMe(messageId),
+                              onDeleteForEveryone: () =>
+                                  deleteForEveryone(messageId),
                             );
                           },
                           child: ChatBubble(
@@ -411,304 +417,6 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
-
-  /// ================= MESSAGE OPTIONS =================
-  void _showMessageOptions({required String messageId, required bool isMe}) {
-    showModalBottomSheet(
-      context: context,
-      builder: (_) {
-        return SafeArea(
-          child: Wrap(
-            children: [
-              ListTile(
-                leading: const Icon(Icons.delete_outline, color: Colors.red),
-                title: const Text("Delete for me"),
-                onTap: () {
-                  Navigator.pop(context);
-                  deleteForMe(messageId);
-                },
-              ),
-
-              if (isMe)
-                ListTile(
-                  leading: const Icon(Icons.delete_forever, color: Colors.red),
-                  title: const Text("Delete for everyone"),
-                  onTap: () {
-                    Navigator.pop(context);
-                    deleteForEveryone(messageId);
-                  },
-                ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  // Widget _chatBubble(
-  //   String message,
-  //   bool isMe,
-  //   String time,
-  //   bool isDeleted,
-  //   String? fileUrl,
-  //   String? fileName,
-  //   String? fileType,
-  // ) {
-  //   final bool isFileMessage = fileUrl != null;
-  //   final isDark = Theme.of(context).brightness == Brightness.dark;
-
-  //   return Align(
-  //     alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-
-  //     child: Column(
-  //       spacing: 10,
-  //       crossAxisAlignment: isMe
-  //           ? CrossAxisAlignment.end
-  //           : CrossAxisAlignment.start,
-
-  //       children: [
-  //         /// ================= IMAGE FILE =================
-  //         if (fileUrl != null && fileType == "image")
-  //           GestureDetector(
-  //             onTap: () {
-  //               downloadAndOpen(fileUrl, fileName ?? "file.image");
-  //             },
-  //             child: Container(
-  //               margin: const EdgeInsets.symmetric(vertical: 4),
-
-  //               child: ClipRRect(
-  //                 borderRadius: BorderRadius.circular(10),
-
-  //                 child: Image.network(
-  //                   fileUrl,
-  //                   height: 220,
-  //                   width: 210,
-  //                   fit: BoxFit.cover,
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-
-  //         /// ================= PDF FILE =================
-  //         if (fileUrl != null && fileType == "pdf")
-  //           GestureDetector(
-  //             onTap: () {
-  //               downloadAndOpen(
-  //                 fileUrl,
-  //                 fileName ??
-  //                     "file_${DateTime.now().millisecondsSinceEpoch}.pdf",
-  //               );
-  //             },
-
-  //             child: Container(
-  //               width: 240,
-
-  //               margin: const EdgeInsets.symmetric(vertical: 4),
-
-  //               padding: const EdgeInsets.all(6),
-
-  //               decoration: BoxDecoration(
-  //                 color: Colors.red.shade50,
-  //                 borderRadius: BorderRadius.circular(10),
-  //               ),
-
-  //               child: Row(
-  //                 children: [
-  //                   const Icon(
-  //                     Icons.picture_as_pdf,
-  //                     color: Colors.red,
-  //                     size: 34,
-  //                   ),
-
-  //                   const SizedBox(width: 10),
-
-  //                   Expanded(
-  //                     child: Column(
-  //                       crossAxisAlignment: CrossAxisAlignment.start,
-
-  //                       children: [
-  //                         Text(
-  //                           fileName ?? "PDF File",
-
-  //                           maxLines: 1,
-  //                           overflow: TextOverflow.ellipsis,
-
-  //                           style: const TextStyle(
-  //                             fontWeight: FontWeight.w600,
-  //                             color: Colors.black,
-  //                           ),
-  //                         ),
-
-  //                         const SizedBox(height: 4),
-
-  //                         const Text(
-  //                           "Tap to open",
-  //                           style: TextStyle(fontSize: 12, color: Colors.grey),
-  //                         ),
-  //                       ],
-  //                     ),
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //           ),
-
-  //         /// ================= OTHER FILE =================
-  //         if (fileUrl != null && fileType != "image" && fileType != "pdf")
-  //           GestureDetector(
-  //             onTap: () {
-  //               downloadAndOpen(fileUrl, fileName ?? "file.pdf");
-  //             },
-
-  //             child: Container(
-  //               width: 240,
-
-  //               margin: const EdgeInsets.symmetric(vertical: 4),
-
-  //               padding: const EdgeInsets.all(12),
-
-  //               decoration: BoxDecoration(
-  //                 color: Colors.blue.shade50,
-  //                 borderRadius: BorderRadius.circular(14),
-  //               ),
-
-  //               child: Row(
-  //                 children: [
-  //                   const Icon(
-  //                     Icons.insert_drive_file,
-  //                     color: Colors.blue,
-  //                     size: 34,
-  //                   ),
-
-  //                   const SizedBox(width: 10),
-
-  //                   Expanded(
-  //                     child: Column(
-  //                       crossAxisAlignment: CrossAxisAlignment.start,
-
-  //                       children: [
-  //                         Text(
-  //                           fileName ?? "File",
-
-  //                           maxLines: 1,
-  //                           overflow: TextOverflow.ellipsis,
-
-  //                           style: const TextStyle(fontWeight: FontWeight.w600),
-  //                         ),
-
-  //                         const SizedBox(height: 4),
-
-  //                         const Text(
-  //                           "Tap to open",
-  //                           style: TextStyle(fontSize: 12, color: Colors.grey),
-  //                         ),
-  //                       ],
-  //                     ),
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //           ),
-
-  //         /// ================= TEXT MESSAGE =================
-  //         if (!isFileMessage || message.isNotEmpty)
-  //           Container(
-  //             margin: const EdgeInsets.symmetric(vertical: 8),
-
-  //             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-
-  //             constraints: const BoxConstraints(maxWidth: 280),
-
-  //             decoration: BoxDecoration(
-  //               color: isDeleted
-  //                   ? (isDark
-  //                         ? AppTheme.darkTheme.primaryColorDark
-  //                         : Colors.white)
-  //                   : isMe
-  //                   ? (isDark
-  //                         ? Color(0xFF375FFF) // WhatsApp Dark Sent Bubble
-  //                         : AppTheme.lightTheme.primaryColorLight)
-  //                   : (isDark
-  //                         ? AppTheme
-  //                               .darkTheme
-  //                               .primaryColorDark // WhatsApp Dark Received Bubble
-  //                         : Colors.white),
-
-  //               borderRadius: BorderRadius.only(
-  //                 topLeft: const Radius.circular(16),
-  //                 topRight: const Radius.circular(16),
-
-  //                 bottomLeft: isMe
-  //                     ? const Radius.circular(16)
-  //                     : const Radius.circular(0),
-
-  //                 bottomRight: isMe
-  //                     ? const Radius.circular(0)
-  //                     : const Radius.circular(16),
-  //               ),
-
-  //               boxShadow: const [
-  //                 BoxShadow(color: Colors.black12, blurRadius: 4),
-  //               ],
-  //             ),
-
-  //             child: Column(
-  //               crossAxisAlignment: CrossAxisAlignment.end,
-  //               children: [
-  //                 Text(
-  //                   message,
-  //                   style: TextStyle(
-  //                     color: isDeleted
-  //                         ? isDark
-  //                               ? Colors.grey.shade400
-  //                               : Colors.grey.shade500
-  //                         : isMe
-  //                         ? isDark
-  //                               ? Colors.white
-  //                               : Colors.grey.shade700
-  //                         : isDark
-  //                         ? Colors.white
-  //                         : Colors.grey.shade700,
-
-  //                     fontSize: 15,
-  //                   ),
-  //                 ),
-
-  //                 const SizedBox(height: 5),
-
-  //                 Text(
-  //                   time,
-  //                   style: TextStyle(
-  //                     color: isDeleted
-  //                         ? Colors.grey
-  //                         : isMe
-  //                         ? isDark
-  //                               ? Colors.grey.shade300
-  //                               : Colors.grey
-  //                         : Colors.grey,
-
-  //                     fontSize: 11,
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-
-  //         /// ================= FILE TIME =================
-  //         if (isFileMessage)
-  //           Padding(
-  //             padding: const EdgeInsets.only(top: 2, left: 6, right: 6),
-
-  //             child: Text(
-  //               time,
-
-  //               style: const TextStyle(fontSize: 11, color: Colors.grey),
-  //             ),
-  //           ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   /// ================= INPUT =================
 

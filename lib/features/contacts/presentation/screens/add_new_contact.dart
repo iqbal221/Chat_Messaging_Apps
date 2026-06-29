@@ -51,6 +51,7 @@ class _AddNewContactScreenState extends State<AddNewContactScreen> {
       }
 
       final userDoc = userQuery.docs.first;
+      print(userDoc);
 
       if (userDoc.id == currentUid) {
         ScaffoldMessenger.of(
@@ -115,7 +116,7 @@ class _AddNewContactScreenState extends State<AddNewContactScreen> {
         backgroundColor: isDark
             ? AppTheme.darkTheme.appBarTheme.backgroundColor
             : AppTheme.lightTheme.appBarTheme.backgroundColor,
-        title: const Text("Add New Contact", style: AppTextStyles.appBarTitle),
+        title: Text("Add New Contact", style: AppTextStyles.titleLarge),
       ),
 
       body: SingleChildScrollView(

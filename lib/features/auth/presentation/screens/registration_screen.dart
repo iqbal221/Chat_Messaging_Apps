@@ -4,6 +4,7 @@ import 'package:chat_messaging/features/auth/services/auth_service.dart';
 import 'package:chat_messaging/features/contacts/presentation/screens/contact_screen.dart';
 import 'package:chat_messaging/features/profiles/presentation/screens/new_profile.dart';
 import 'package:flutter/material.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -23,11 +24,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   bool obscure = true;
   bool isLoading = false;
+  String phoneNumber = '';
 
   Future<void> registerUser() async {
     if (firstNameController.text.trim().isEmpty ||
         lastNameController.text.trim().isEmpty ||
         emailController.text.trim().isEmpty ||
+        phoneNumber.isEmpty ||
         passwordController.text.trim().isEmpty) {
       ScaffoldMessenger.of(
         context,
@@ -43,7 +46,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       firstName: firstNameController.text.trim(),
       lastName: lastNameController.text.trim(),
       email: emailController.text.trim(),
-      phone: phoneController.text.trim(),
+      phone: phoneNumber,
       password: passwordController.text.trim(),
     );
 
@@ -101,6 +104,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         decoration: const InputDecoration(
                           prefixIcon: Icon(Icons.person),
                           hintText: "First Name",
+                          border: OutlineInputBorder(),
                         ),
                       ),
 
@@ -111,6 +115,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         decoration: const InputDecoration(
                           prefixIcon: Icon(Icons.person_outline),
                           hintText: "Last Name",
+                          border: OutlineInputBorder(),
                         ),
                       ),
 
@@ -121,17 +126,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         decoration: const InputDecoration(
                           prefixIcon: Icon(Icons.email),
                           hintText: "Email",
+                          border: OutlineInputBorder(),
                         ),
                       ),
 
                       const SizedBox(height: 18),
 
-                      TextField(
-                        controller: phoneController,
+                      IntlPhoneField(
+                        initialCountryCode: "BD",
                         decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.phone),
-                          hintText: "Mobile",
+                          hintText: "Mobile Number",
+                          border: OutlineInputBorder(),
                         ),
+
+                        onChanged: (phone) {
+                          phoneNumber = phone.completeNumber;
+                        },
                       ),
 
                       const SizedBox(height: 18),
@@ -142,6 +152,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         decoration: InputDecoration(
                           prefixIcon: const Icon(Icons.lock),
                           hintText: "Password",
+                          border: OutlineInputBorder(),
                           suffixIcon: IconButton(
                             icon: Icon(
                               obscure ? Icons.visibility : Icons.visibility_off,
@@ -173,19 +184,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 )
                               : const Text("Create Account"),
                         ),
-                      ),
-
-                      const SizedBox(height: 25),
-
-                      Row(
-                        children: const [
-                          Expanded(child: Divider()),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: Text("OR"),
-                          ),
-                          Expanded(child: Divider()),
-                        ],
                       ),
 
                       const SizedBox(height: 25),

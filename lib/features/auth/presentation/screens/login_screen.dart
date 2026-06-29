@@ -82,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Login",
+                        "Login To Continue",
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
 
@@ -148,30 +148,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
 
                       const SizedBox(height: 25),
-
-                      Row(
-                        children: const [
-                          Expanded(child: Divider()),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: Text("OR"),
-                          ),
-                          Expanded(child: Divider()),
-                        ],
-                      ),
-
-                      const SizedBox(height: 25),
-
-                      OutlinedButton.icon(
-                        style: OutlinedButton.styleFrom(
-                          minimumSize: const Size(double.infinity, 55),
-                        ),
-                        icon: const Icon(Icons.g_mobiledata, size: 32),
-                        label: const Text("Continue with Google"),
-                        onPressed: () {},
-                      ),
-
-                      const SizedBox(height: 30),
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

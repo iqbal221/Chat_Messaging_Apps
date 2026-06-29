@@ -149,7 +149,7 @@ class _NewUserProfileScreenState extends State<NewUserProfileScreen> {
             ? AppTheme.darkTheme.appBarTheme.backgroundColor
             : AppTheme.lightTheme.appBarTheme.backgroundColor,
         centerTitle: true,
-        title: const Text("Create Profile", style: AppTextStyles.appBarTitle),
+        title: Text("Create Profile", style: AppTextStyles.titleLarge),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),

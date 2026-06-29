@@ -41,7 +41,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ? AppTheme.darkTheme.appBarTheme.backgroundColor
             : AppTheme.lightTheme.appBarTheme.backgroundColor,
         centerTitle: true,
-        title: const Text("Profile", style: AppTextStyles.appBarTitle),
+        title: Text("Profile", style: AppTextStyles.titleLarge),
       ),
 
       body: SingleChildScrollView(
@@ -61,7 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       shape: BoxShape.circle,
                       border: isDark
                           ? Border.all(color: Colors.grey.shade900)
-                          : Border.all(color: Colors.blue, width: 3),
+                          : Border.all(color: Colors.blue, width: 2),
                       image: DecorationImage(
                         image: userProvider.profileImage.isNotEmpty
                             ? NetworkImage(userProvider.profileImage)

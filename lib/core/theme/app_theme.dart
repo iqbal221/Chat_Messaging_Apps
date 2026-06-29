@@ -1,5 +1,6 @@
 import 'package:chat_messaging/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   /// CHAT APP LIGHT THEME
@@ -24,7 +25,7 @@ class AppTheme {
       surface: Colors.white,
     ),
 
-    textTheme: TextTheme(
+    textTheme: GoogleFonts.interTextTheme().copyWith(
       titleLarge: AppTextStyles.titleLarge.copyWith(color: Colors.black87),
       titleSmall: AppTextStyles.titleSmall.copyWith(color: Colors.black54),
       bodyMedium: AppTextStyles.buttonText.copyWith(color: Colors.black87),
@@ -87,7 +88,7 @@ class AppTheme {
       surface: Color(0xFF1F2C2B),
     ),
 
-    textTheme: TextTheme(
+    textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme).copyWith(
       titleLarge: AppTextStyles.titleLarge.copyWith(color: Colors.white),
       titleSmall: AppTextStyles.titleSmall.copyWith(color: Colors.white70),
       bodyMedium: AppTextStyles.buttonText.copyWith(color: Colors.white),

@@ -4,7 +4,7 @@ import 'package:chat_messaging/core/theme/theme_provider.dart';
 import 'package:chat_messaging/features/contacts/presentation/screens/add_new_contact.dart';
 import 'package:chat_messaging/features/chat/presentation/screens/chat_screen.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
-import 'package:chat_messaging/features/contacts/presentation/screens/contact_group.dart';
+import 'package:chat_messaging/features/contacts/presentation/widgets/contact_group.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -90,7 +90,7 @@ class _ContactScreenState extends State<ContactScreen> {
                         ),
                       ),
                     )
-                  : Text("Contacts", style: AppTextStyles.appBarTitle),
+                  : Text("Contacts", style: AppTextStyles.titleLarge),
 
               actions: [
                 // search button

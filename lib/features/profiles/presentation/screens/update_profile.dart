@@ -63,14 +63,6 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
       return;
     }
 
-    // final userProvider = context.read<UserProvider>();
-
-    // await userProvider.updateProfile(
-    //   first: firstNameController.text.trim(),
-    //   last: lastNameController.text.trim(),
-    //   imageFile: imageFile,
-    // );
-
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text('Profile Updated')));
@@ -88,7 +80,7 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
           : AppTheme.lightTheme.scaffoldBackgroundColor,
 
       appBar: AppBar(
-        title: const Text("Update Profile", style: AppTextStyles.appBarTitle),
+        title: Text("Update Profile", style: AppTextStyles.titleLarge),
         backgroundColor: isDark
             ? AppTheme.darkTheme.appBarTheme.backgroundColor
             : AppTheme.lightTheme.appBarTheme.backgroundColor,
@@ -113,13 +105,9 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: isDark ? Colors.grey.shade900 : Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black,
-                              blurRadius: 12,
-                              offset: const Offset(0, 5),
-                            ),
-                          ],
+                          border: isDark
+                              ? Border.all(color: Colors.grey.shade900)
+                              : Border.all(color: Colors.blue, width: 2),
                         ),
                         child: CircleAvatar(
                           radius: 56,
@@ -160,7 +148,10 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
             /// FIRST NAME
             TextField(
               controller: firstNameController,
-              decoration: InputDecoration(hintText: 'First Name'),
+              decoration: InputDecoration(
+                hintText: 'First Name',
+                border: OutlineInputBorder(),
+              ),
             ),
 
             const SizedBox(height: 18),
@@ -168,7 +159,10 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
             /// LAST NAME
             TextField(
               controller: lastNameController,
-              decoration: InputDecoration(hintText: 'Last Name'),
+              decoration: InputDecoration(
+                hintText: 'Last Name',
+                border: OutlineInputBorder(),
+              ),
             ),
 
             const SizedBox(height: 30),

@@ -75,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ElevatedButton(
               // onPressed: checkAuthStatus,
               onPressed: () {
-                Navigator.pushNamed(context, PhoneNumberScreen.name);
+                Navigator.pushNamed(context, LoginScreen.name);
               },
               child: const Text('Start Messaging'),
             ),
