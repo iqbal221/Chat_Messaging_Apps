@@ -1,4 +1,3 @@
-import 'package:chat_messaging/features/auth/presentation/screens/input_phone_screen.dart';
 import 'package:chat_messaging/core/screens/main_nav_bar.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
 import 'package:chat_messaging/features/auth/presentation/screens/login_screen.dart';

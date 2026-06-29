@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
@@ -29,8 +30,8 @@ class _NewUserProfileScreenState extends State<NewUserProfileScreen> {
   bool isLoading = false;
 
   // 🔥 CHANGE THESE VALUES
-  final String cloudName = "deuky2rb8";
-  final String uploadPreset = "chat_app_unsigned";
+  final String cloudName = dotenv.env["CLOUD_NAME"] ?? "";
+  final String uploadPreset = dotenv.env["UPLOAD_PRESET"] ?? "";
 
   Future<String> getFcmToken() async {
     final messaging = FirebaseMessaging.instance;
