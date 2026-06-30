@@ -22,8 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> checkAuthStatus() async {
+    await Future.delayed(Duration(seconds: 3));
     final user = FirebaseAuth.instance.currentUser;
-
     print("CURRENT USER: $user");
 
     if (user != null) {

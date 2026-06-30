@@ -13,6 +13,17 @@ class AuthService {
     required String password,
   }) async {
     try {
+      // Check phone number already exists
+      final phoneQuery = await FirebaseFirestore.instance
+          .collection('users')
+          .where('phoneNumber', isEqualTo: phone)
+          .limit(1)
+          .get();
+
+      if (phoneQuery.docs.isNotEmpty) {
+        return "Mobile number already exists";
+      }
+
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
         email: email.trim(),
         password: password,
@@ -27,7 +38,7 @@ class AuthService {
           "lastName": lastName,
           "email": email,
           "phoneNumber": phone,
-          "password": password,
+          "profileImage": "",
           "createdAt": FieldValue.serverTimestamp(),
         });
       }

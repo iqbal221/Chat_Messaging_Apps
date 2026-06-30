@@ -1,10 +1,15 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:chat_messaging/core/constants/app_text_styles.dart';
 import 'package:chat_messaging/features/auth/providers/auth_provider.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
 import 'package:chat_messaging/core/screens/main_nav_bar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -23,6 +28,8 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
   final lastNameController = TextEditingController();
 
   File? imageFile;
+  String phoneNumber = '';
+  String email = '';
 
   @override
   void initState() {
@@ -35,8 +42,16 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
 
       firstNameController.text = userProvider.firstName;
       lastNameController.text = userProvider.lastName;
+      phoneNumber = userProvider.phoneNumber;
+      email = userProvider.email;
     });
   }
+
+  bool isLoading = false;
+
+  // 🔥 CHANGE THESE VALUES
+  final String cloudName = dotenv.env["CLOUD_NAME"] ?? "";
+  final String uploadPreset = dotenv.env["UPLOAD_PRESET"] ?? "";
 
   /// PICK IMAGE
   Future<void> pickImage() async {
@@ -54,7 +69,30 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
     }
   }
 
-  /// SAVE PROFILE
+  /// ✅ Upload image to Cloudinary
+  Future<String> uploadToCloudinary(File file) async {
+    final url = Uri.parse(
+      "https://api.cloudinary.com/v1_1/$cloudName/image/upload",
+    );
+
+    final request = http.MultipartRequest("POST", url);
+
+    request.fields["upload_preset"] = uploadPreset;
+
+    request.files.add(await http.MultipartFile.fromPath("file", file.path));
+
+    final response = await request.send();
+
+    final resBody = await response.stream.bytesToString();
+    final data = jsonDecode(resBody);
+
+    if (response.statusCode == 200) {
+      return data["secure_url"];
+    } else {
+      throw Exception(data);
+    }
+  }
+
   Future<void> saveProfile() async {
     if (firstNameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(
@@ -63,11 +101,46 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
       return;
     }
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Profile Updated')));
+    setState(() => isLoading = true);
 
-    Navigator.pushReplacementNamed(context, MainNavBarScreen.name);
+    try {
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+
+      String imageUrl = "";
+
+      // ✅ Upload image using Cloudinary
+      if (imageFile != null) {
+        imageUrl = await uploadToCloudinary(imageFile!);
+        debugPrint("CLOUDINARY URL: $imageUrl");
+      }
+      print(imageUrl);
+
+      // ✅ Save to Firestore
+      await FirebaseFirestore.instance.collection('users').doc(uid).set({
+        'firstName': firstNameController.text.trim(),
+        'lastName': lastNameController.text.trim(),
+        'profileImage': imageUrl,
+        "phoneNumber": phoneNumber,
+        "email": email,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
+      setState(() => isLoading = false);
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Update Profle')));
+
+      Navigator.pushReplacementNamed(context, MainNavBarScreen.name);
+    } catch (e) {
+      setState(() => isLoading = false);
+
+      debugPrint("UPLOAD FAILED: $e");
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.toString())));
+    }
   }
 
   @override

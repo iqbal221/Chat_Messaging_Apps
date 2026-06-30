@@ -1,8 +1,7 @@
 import 'package:chat_messaging/core/screens/main_nav_bar.dart';
 import 'package:chat_messaging/core/theme/app_theme.dart';
 import 'package:chat_messaging/features/auth/services/auth_service.dart';
-import 'package:chat_messaging/features/contacts/presentation/screens/contact_screen.dart';
-import 'package:chat_messaging/features/profiles/presentation/screens/new_profile.dart';
+
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
