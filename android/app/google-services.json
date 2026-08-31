@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:782601360703:android:78916f0ebb80668ee4af8a",
         "android_client_info": {
-          "package_name": "com.zahed.chat_messaging"
+          "package_name": "com.zahed.ChatVani"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "782601360703-5majdi3nbqf0tga4ujtsbro26ljus1s7.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.zahed.chat_messaging",
+            "package_name": "com.zahed.ChatVani",
             "certificate_hash": "2eb33849f459cac7ef136869d9725bed8b18430f"
           }
         },

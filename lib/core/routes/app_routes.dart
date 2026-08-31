@@ -1,16 +1,16 @@
-import 'package:chat_messaging/features/auth/presentation/screens/login_screen.dart';
-import 'package:chat_messaging/features/auth/presentation/screens/registration_screen.dart';
-import 'package:chat_messaging/features/contacts/presentation/screens/add_new_contact.dart';
-import 'package:chat_messaging/features/chat/presentation/screens/chat_screen.dart';
-import 'package:chat_messaging/features/contacts/presentation/screens/contact_screen.dart';
-import 'package:chat_messaging/features/home/presentation/screens/home_screen.dart';
-import 'package:chat_messaging/features/auth/presentation/screens/input_phone_screen.dart';
-import 'package:chat_messaging/core/screens/main_nav_bar.dart';
-import 'package:chat_messaging/features/profiles/presentation/screens/new_profile.dart';
-import 'package:chat_messaging/features/auth/presentation/screens/otp_verify.dart';
-import 'package:chat_messaging/features/profiles/presentation/screens/profile_screen.dart';
-import 'package:chat_messaging/features/chat/presentation/screens/recent_chat_contact_screen.dart';
-import 'package:chat_messaging/features/profiles/presentation/screens/update_profile.dart';
+import 'package:ChatVani/features/auth/presentation/screens/login_screen.dart';
+import 'package:ChatVani/features/auth/presentation/screens/registration_screen.dart';
+import 'package:ChatVani/features/contacts/presentation/screens/add_new_contact.dart';
+import 'package:ChatVani/features/chat/presentation/screens/chat_screen.dart';
+import 'package:ChatVani/features/contacts/presentation/screens/contact_screen.dart';
+import 'package:ChatVani/features/home/presentation/screens/home_screen.dart';
+import 'package:ChatVani/features/auth/presentation/screens/input_phone_screen.dart';
+import 'package:ChatVani/core/screens/main_nav_bar.dart';
+import 'package:ChatVani/features/profiles/presentation/screens/new_profile.dart';
+import 'package:ChatVani/features/auth/presentation/screens/otp_verify.dart';
+import 'package:ChatVani/features/profiles/presentation/screens/profile_screen.dart';
+import 'package:ChatVani/features/chat/presentation/screens/recent_chat_contact_screen.dart';
+import 'package:ChatVani/features/profiles/presentation/screens/update_profile.dart';
 import 'package:flutter/material.dart';
 
 class AppRoutes {

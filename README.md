@@ -123,7 +123,7 @@ lib/
 ### Clone Repository
 
 ```bash
-git clone https://github.com/yourusername/chat_messaging.git
+git clone https://github.com/yourusername/ChatVani.git
 ```
 
 ### Install Packages

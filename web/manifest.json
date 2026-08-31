@@ -1,6 +1,6 @@
 {
-    "name": "chat_messaging",
-    "short_name": "chat_messaging",
+    "name": "ChatVani",
+    "short_name": "ChatVani",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

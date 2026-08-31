@@ -1,4 +1,4 @@
-package com.zahed.chat_messaging
+package com.zahed.ChatVani
 
 import io.flutter.embedding.android.FlutterActivity
 

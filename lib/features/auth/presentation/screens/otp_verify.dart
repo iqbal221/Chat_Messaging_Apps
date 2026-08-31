@@ -1,6 +1,6 @@
-import 'package:chat_messaging/core/screens/main_nav_bar.dart';
-import 'package:chat_messaging/features/profiles/presentation/screens/new_profile.dart';
-import 'package:chat_messaging/core/theme/app_theme.dart';
+import 'package:ChatVani/core/screens/main_nav_bar.dart';
+import 'package:ChatVani/features/profiles/presentation/screens/new_profile.dart';
+import 'package:ChatVani/core/theme/app_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';

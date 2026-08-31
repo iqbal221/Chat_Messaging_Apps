@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:chat_messaging/core/constants/app_text_styles.dart';
-import 'package:chat_messaging/features/auth/providers/auth_provider.dart';
-import 'package:chat_messaging/core/theme/app_theme.dart';
-import 'package:chat_messaging/core/screens/main_nav_bar.dart';
+import 'package:ChatVani/core/constants/app_text_styles.dart';
+import 'package:ChatVani/features/auth/providers/auth_provider.dart';
+import 'package:ChatVani/core/theme/app_theme.dart';
+import 'package:ChatVani/core/screens/main_nav_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

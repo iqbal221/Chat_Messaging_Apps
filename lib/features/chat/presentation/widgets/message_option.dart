@@ -1,4 +1,4 @@
-import 'package:chat_messaging/features/chat/presentation/widgets/message_option_bottom_sheet.dart';
+import 'package:ChatVani/features/chat/presentation/widgets/message_option_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
 Future<void> showMessageOptions({

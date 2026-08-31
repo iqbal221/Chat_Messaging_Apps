@@ -1,10 +1,10 @@
-import 'package:chat_messaging/common/widget/dark_light_theme_button.dart';
-import 'package:chat_messaging/core/constants/app_text_styles.dart';
-import 'package:chat_messaging/core/theme/theme_provider.dart';
-import 'package:chat_messaging/features/contacts/presentation/screens/add_new_contact.dart';
-import 'package:chat_messaging/features/chat/presentation/screens/chat_screen.dart';
-import 'package:chat_messaging/core/theme/app_theme.dart';
-import 'package:chat_messaging/features/contacts/presentation/widgets/contact_group.dart';
+import 'package:ChatVani/common/widget/dark_light_theme_button.dart';
+import 'package:ChatVani/core/constants/app_text_styles.dart';
+import 'package:ChatVani/core/theme/theme_provider.dart';
+import 'package:ChatVani/features/contacts/presentation/screens/add_new_contact.dart';
+import 'package:ChatVani/features/chat/presentation/screens/chat_screen.dart';
+import 'package:ChatVani/core/theme/app_theme.dart';
+import 'package:ChatVani/features/contacts/presentation/widgets/contact_group.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

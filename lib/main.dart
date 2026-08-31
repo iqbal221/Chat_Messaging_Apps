@@ -1,6 +1,6 @@
-import 'package:chat_messaging/app.dart';
-import 'package:chat_messaging/core/firebase/fcm_service.dart';
-import 'package:chat_messaging/core/firebase/notification_service.dart';
+import 'package:ChatVani/app.dart';
+import 'package:ChatVani/core/firebase/fcm_service.dart';
+import 'package:ChatVani/core/firebase/notification_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -41,5 +41,5 @@ void main() async {
 
   await dotenv.load(fileName: ".env");
 
-  runApp(const ChatMessaging());
+  runApp(const ChatVani());
 }

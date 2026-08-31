@@ -1,8 +1,8 @@
-import 'package:chat_messaging/core/constants/app_text_styles.dart';
-import 'package:chat_messaging/features/auth/presentation/screens/login_screen.dart';
-import 'package:chat_messaging/features/auth/providers/auth_provider.dart';
-import 'package:chat_messaging/features/profiles/presentation/screens/update_profile.dart';
-import 'package:chat_messaging/core/theme/app_theme.dart';
+import 'package:ChatVani/core/constants/app_text_styles.dart';
+import 'package:ChatVani/features/auth/presentation/screens/login_screen.dart';
+import 'package:ChatVani/features/auth/providers/auth_provider.dart';
+import 'package:ChatVani/features/profiles/presentation/screens/update_profile.dart';
+import 'package:ChatVani/core/theme/app_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

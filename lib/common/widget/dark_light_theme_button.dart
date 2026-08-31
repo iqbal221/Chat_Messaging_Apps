@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:chat_messaging/core/theme/theme_provider.dart';
+import 'package:ChatVani/core/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class DarkLightThemeButton extends StatelessWidget {

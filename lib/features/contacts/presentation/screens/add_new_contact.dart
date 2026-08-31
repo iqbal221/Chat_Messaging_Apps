@@ -1,5 +1,5 @@
-import 'package:chat_messaging/core/constants/app_text_styles.dart';
-import 'package:chat_messaging/core/theme/app_theme.dart';
+import 'package:ChatVani/core/constants/app_text_styles.dart';
+import 'package:ChatVani/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

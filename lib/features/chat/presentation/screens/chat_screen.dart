@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:chat_messaging/core/constants/app_text_styles.dart';
-import 'package:chat_messaging/core/theme/app_theme.dart';
-import 'package:chat_messaging/features/chat/presentation/widgets/chat_bubble.dart';
-import 'package:chat_messaging/features/chat/presentation/widgets/message_option.dart';
+import 'package:ChatVani/core/constants/app_text_styles.dart';
+import 'package:ChatVani/core/theme/app_theme.dart';
+import 'package:ChatVani/features/chat/presentation/widgets/chat_bubble.dart';
+import 'package:ChatVani/features/chat/presentation/widgets/message_option.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
